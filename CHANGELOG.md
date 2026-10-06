@@ -18,7 +18,9 @@ All notable changes to spiff are documented here. Format follows
   (bordered panel with a dynamic `AddX` surface).
 - Phase 4: `elements/base` (row + flag registry), `label`, `button`, `toggle`,
   `slider`; `:Set`/`:Get`/`:Destroy` on each.
+- Phase 5: `elements/textbox`, `dropdown`, `multibox` (inline expand), `keybind`
+  (click-to-rebind + press/release hooks); `render.textbox` primitive.
 
 ### Verified
 
-- All 20 `.luau` files compile with `luau-compile` (Luau 0.741).
+- All `.luau` files compile with `luau-compile` (Luau 0.741).

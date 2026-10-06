@@ -15,5 +15,9 @@ return {
 	"elements.button",
 	"elements.toggle",
 	"elements.slider",
+	"elements.textbox",
+	"elements.dropdown",
+	"elements.multibox",
+	"elements.keybind",
 	"init",
 }

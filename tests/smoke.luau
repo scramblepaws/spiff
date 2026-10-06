@@ -19,11 +19,7 @@ assert(sec.frame ~= nil, "[smoke] section.frame missing")
 local label = sec:AddLabel({ text = "hi" })
 assert(label:Get() == "hi", "[smoke] label Set/Get")
 
-local fired = false
-local button = sec:AddButton({ name = "B", callback = function()
-	fired = true
-end })
-assert(type(button) == "table", "[smoke] button missing")
+local button = sec:AddButton({ name = "B", callback = function() end })
 button:Set("Go")
 assert(button:Get() == "Go", "[smoke] button Set/Get")
 
@@ -38,6 +34,28 @@ slider:Set(7)
 assert(slider:Get() == 7, "[smoke] slider Set/Get")
 slider:Set(99)
 assert(slider:Get() == 10, "[smoke] slider clamp")
+
+local textbox = sec:AddTextbox({ name = "TB", value = "hi" })
+assert(textbox:Get() == "hi", "[smoke] textbox initial")
+textbox:Set("yo")
+assert(textbox:Get() == "yo", "[smoke] textbox Set/Get")
+
+local dropdown = sec:AddDropdown({ name = "DD", options = { "a", "b", "c" }, value = "a" })
+assert(dropdown:Get() == "a", "[smoke] dropdown initial")
+dropdown:Set("b")
+assert(dropdown:Get() == "b", "[smoke] dropdown Set/Get")
+dropdown:Toggle(true)
+dropdown:Toggle(false)
+
+local multibox = sec:AddMultibox({ name = "MB", options = { "x", "y" }, value = { true, false } })
+assert(multibox:Get()[1] == true, "[smoke] multibox initial")
+multibox:Set({ false, true })
+assert(multibox:Get()[2] == true, "[smoke] multibox Set/Get")
+
+local keybind = sec:AddKeybind({ name = "KB", value = Enum.KeyCode.E })
+assert(keybind:Get() == Enum.KeyCode.E, "[smoke] keybind initial")
+keybind:Set(Enum.KeyCode.Q)
+assert(keybind:Get() == Enum.KeyCode.Q, "[smoke] keybind Set/Get")
 
 win:Destroy()
 assert(win.gui == nil, "[smoke] window:Destroy did not clear gui")

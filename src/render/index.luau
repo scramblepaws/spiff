@@ -64,6 +64,32 @@ return function(ctx)
 		return create("TextButton", props, parent)
 	end
 
+	function render.textbox(parent, props)
+		props = props or {}
+		if props.BackgroundColor3 == nil then
+			props.BackgroundColor3 = theme.background
+		end
+		if props.TextColor3 == nil then
+			props.TextColor3 = theme.text
+		end
+		if props.PlaceholderColor3 == nil then
+			props.PlaceholderColor3 = theme.dim
+		end
+		if props.Font == nil then
+			props.Font = theme.font
+		end
+		if props.TextSize == nil then
+			props.TextSize = theme.textsize
+		end
+		if props.BorderSizePixel == nil then
+			props.BorderSizePixel = 0
+		end
+		if props.ClearTextOnFocus == nil then
+			props.ClearTextOnFocus = false
+		end
+		return create("TextBox", props, parent)
+	end
+
 	function render.stroke(parent, color, thickness)
 		return create("UIStroke", {
 			Color = color or theme.outline,

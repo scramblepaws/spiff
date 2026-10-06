@@ -337,6 +337,7 @@ return function(ctx)
 	function Window:Notifications(info)
 		return ctx.require("widgets.notifications").new(self, info)
 	end
+	Window.NotificationList = Window.Notifications -- reference name
 
 	function Window:KeybindsList(info)
 		return ctx.require("widgets.keybindslist").new(self, info)

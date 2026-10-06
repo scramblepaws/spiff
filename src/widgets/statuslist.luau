@@ -6,6 +6,7 @@ return function(ctx)
 	local W = {}
 
 	function W.new(window, info)
+		info = info or {}
 		local api = {}
 		local entries = {}
 		local visible = false

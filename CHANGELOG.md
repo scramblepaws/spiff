@@ -30,6 +30,8 @@ All notable changes to spiff are documented here. Format follows
 - `Section:AddButtonholder` alias added (the dynamic surface only had
   `AddButtonHolder`), fixing `attempt to call missing method`.
 - `Section:AddConfigbox` alias added (canonical is `AddConfigBox`).
+- `statuslist` no longer indexes a nil `info` when created with no arguments
+  (`win:StatusList()`).
 
 - Loader fetched a bare relative path instead of a full URL, causing
   `invalid protocol`. Module and manifest fetches now prefix `Base`.

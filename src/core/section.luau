@@ -77,13 +77,17 @@ return function(ctx)
 
 	for api, kind in pairs(ELEMENTS) do
 		local k = kind
-		Section["Add" .. api] = function(self, info)
+		local method = function(self, info)
 			return self:Add(k, info)
 		end
+		Section["Add" .. api] = method
+		Section[api] = method -- reference-style: section:Toggle(...)
 	end
-	-- accept both capitalisations
+	-- accept alternate capitalisations
 	Section.AddButtonholder = Section.AddButtonHolder
+	Section.Buttonholder = Section.ButtonHolder
 	Section.AddConfigbox = Section.AddConfigBox
+	Section.Configbox = Section.ConfigBox
 
 	function Section:Destroy()
 		if self.frame then

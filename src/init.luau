@@ -17,6 +17,10 @@ return function(ctx)
 	function Library.Window(info)
 		return Window.new(info)
 	end
+	-- reference-style constructor: library:New({ ... })
+	function Library:New(info)
+		return Window.new(info)
+	end
 
 	function Library:Unload()
 		ctx.util.signal.disconnectAll()

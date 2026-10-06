@@ -4,6 +4,14 @@ All notable changes to spiff are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is
 [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- `demo.luau` is now a full showcase: 4 pages, every element, all widgets, and
+  working callbacks (WalkSpeed/JumpPower, infinite jump, teleport, camera,
+  accent recolor, saved-config listing, unload).
+
 ## [1.0.0] - 2026-10-06
 
 ### Added

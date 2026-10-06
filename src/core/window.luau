@@ -52,11 +52,32 @@ return function(ctx)
 		local main = render.frame(gui, {
 			Name = "Main",
 			Size = UDim2.fromOffset(size.X, size.Y),
-			Position = UDim2.new(0.5, -size.X / 2, 0.5, -size.Y / 2),
+			Position = UDim2.new(0.5, 0, 0.5, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundColor3 = theme.outline,
 			Active = true,
 		})
 		self.main = main
+
+		-- autoscale to the viewport height
+		local scale = render.create("UIScale", { Scale = 1 }, main)
+		local workspaceSvc = game:GetService("Workspace")
+		local function fit()
+			local cam = workspaceSvc.CurrentCamera
+			local h = cam and cam.ViewportSize.Y or 900
+			scale.Scale = math.clamp(h / 900, 0.7, 1.4)
+		end
+		local function track(cam)
+			if cam then
+				ctx.util.signal.connect(cam:GetPropertyChangedSignal("ViewportSize"), fit)
+			end
+		end
+		fit()
+		track(workspaceSvc.CurrentCamera)
+		ctx.util.signal.connect(workspaceSvc:GetPropertyChangedSignal("CurrentCamera"), function()
+			track(workspaceSvc.CurrentCamera)
+			fit()
+		end)
 
 		local accent = render.frame(main, {
 			Position = UDim2.new(0, 1, 0, 1),

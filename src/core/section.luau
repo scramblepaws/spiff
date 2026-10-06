@@ -36,14 +36,14 @@ return function(ctx)
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundColor3 = theme.darkcontrast,
 		})
-		render.borders(frame, theme.inline, theme.outline)
-		render.padding(frame, 6, 6)
+		render.borders(frame, theme.inline)
+		render.padding(frame, 4, 4)
 		self.frame = frame
 
 		-- full-width accent line flush to the top edge (offset back out of the padding)
 		local accent = render.frame(frame, {
-			Size = UDim2.new(1, 12, 0, 1),
-			Position = UDim2.new(0, -6, 0, -6),
+			Size = UDim2.new(1, 8, 0, 1),
+			Position = UDim2.new(0, -4, 0, -4),
 			BackgroundColor3 = theme.accent,
 			ZIndex = 2,
 		})
@@ -59,7 +59,7 @@ return function(ctx)
 		self.title = title
 
 		local content = render.frame(frame, {
-			Position = UDim2.new(0, 0, 0, 22),
+			Position = UDim2.new(0, 0, 0, 18),
 			Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1,
@@ -83,6 +83,7 @@ return function(ctx)
 	end
 	-- accept both capitalisations
 	Section.AddButtonholder = Section.AddButtonHolder
+	Section.AddConfigbox = Section.AddConfigBox
 
 	function Section:Destroy()
 		if self.frame then

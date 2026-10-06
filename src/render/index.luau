@@ -105,10 +105,9 @@ return function(ctx)
 		}, parent)
 	end
 
-	-- Octernal layered border: a wider outer ring plus a 1px inner ring
-	function render.borders(parent, outerColor, innerColor)
-		render.stroke(parent, outerColor or theme.inline, 2)
-		render.stroke(parent, innerColor or theme.outline, 1)
+	-- one clean 1px border
+	function render.borders(parent, color)
+		render.stroke(parent, color or theme.inline, 1)
 		return parent
 	end
 

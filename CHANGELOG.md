@@ -10,6 +10,8 @@ All notable changes to spiff are documented here. Format follows
 
 - Removed all edge rounding (`render.corner` / `UICorner` deleted) to match
   Octernal's square panels.
+- Window autoscales to the viewport height via `UIScale`; single 1px borders
+  (the 2px double stroke looked off); tighter 4px section padding.
 - Elements restyled to Octernal's layout: toggles are a 15px checkbox on the
   left + label (no row box), buttons are full-width centered controls with a
   hover brighten, sliders put the value on the track, textboxes/dropdowns/
@@ -27,6 +29,7 @@ All notable changes to spiff are documented here. Format follows
   the demo failed with `attempt to call a nil value`. Window is now exposed.
 - `Section:AddButtonholder` alias added (the dynamic surface only had
   `AddButtonHolder`), fixing `attempt to call missing method`.
+- `Section:AddConfigbox` alias added (canonical is `AddConfigBox`).
 
 - Loader fetched a bare relative path instead of a full URL, causing
   `invalid protocol`. Module and manifest fetches now prefix `Base`.

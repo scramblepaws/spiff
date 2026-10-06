@@ -87,6 +87,14 @@ local status = win:StatusList()
 status:Set("Test", "ok")
 assert(type(status.Remove) == "function", "[smoke] statuslist.Remove missing")
 
+assert(Menu.Theme ~= nil and type(Menu.Theme.UpdateColor) == "function", "[smoke] Theme missing")
+local cfg = win:GetConfig()
+assert(type(cfg) == "table", "[smoke] GetConfig not a table")
+if win:SaveConfig("spiff_smoke") then
+	assert(win:LoadConfig("spiff_smoke") == true, "[smoke] LoadConfig failed")
+	win:DeleteConfig("spiff_smoke")
+end
+
 win:Destroy()
 assert(win.gui == nil, "[smoke] window:Destroy did not clear gui")
 

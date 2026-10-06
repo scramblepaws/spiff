@@ -180,6 +180,72 @@ return function(ctx)
 		return page
 	end
 
+	function Window:GetConfig()
+		local out = {}
+		for flag, api in pairs(ctx.state.flags) do
+			local ok, value = pcall(function()
+				return api:Get()
+			end)
+			if ok then
+				out[flag] = ctx.util.serialize.encode(value)
+			end
+		end
+		return out
+	end
+
+	function Window:SaveConfig(name)
+		local fs = ctx.util.filesystem
+		fs.ensure(ctx.state.folders.main)
+		fs.ensure(ctx.state.folders.configs)
+		local path = ctx.state.folders.configs .. "/" .. name .. ".json"
+		return fs.write(path, fs.encode(self:GetConfig()))
+	end
+
+	function Window:LoadConfig(name)
+		local fs = ctx.util.filesystem
+		local raw = fs.read(ctx.state.folders.configs .. "/" .. name .. ".json")
+		if not raw then
+			return false
+		end
+		local data = fs.decode(raw)
+		if type(data) ~= "table" then
+			return false
+		end
+		for flag, value in pairs(data) do
+			local api = ctx.state.flags[flag]
+			if api and api.Set then
+				pcall(function()
+					api:Set(ctx.util.serialize.decode(value))
+				end)
+			end
+		end
+		return true
+	end
+
+	function Window:DeleteConfig(name)
+		if typeof(delfile) ~= "function" then
+			return false
+		end
+		local path = ctx.state.folders.configs .. "/" .. name .. ".json"
+		return pcall(delfile, path)
+	end
+
+	function Window:ListConfigs()
+		local out = {}
+		if typeof(listfiles) ~= "function" then
+			return out
+		end
+		pcall(function()
+			for _, file in ipairs(listfiles(ctx.state.folders.configs)) do
+				local name = tostring(file):match("([^/\\]+)%.json$")
+				if name then
+					out[#out + 1] = name
+				end
+			end
+		end)
+		return out
+	end
+
 	function Window:Watermark(info)
 		return ctx.require("widgets.watermark").new(self, info)
 	end

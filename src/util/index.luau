@@ -5,6 +5,7 @@ return function(ctx)
 	util.signal = ctx.require("util.signal")
 	util.theme = ctx.require("util.theme")
 	util.filesystem = ctx.require("util.filesystem")
+	util.serialize = ctx.require("util.serialize")
 
 	local counter = 0
 	function util.newFlag(prefix)

@@ -16,7 +16,7 @@ One phase per commit + push. Each line is "done" when it is committed and the
       buttonholder.
 - [x] **Phase 7 — Widgets.** watermark, notifications, keybinds list, status list.
       (cursor skipped: native cursor already exists.)
-- [ ] **Phase 8 — Config & theming.** save/load config, `theme:UpdateColor`, unload.
+- [x] **Phase 8 — Config & theming.** save/load config, `theme:UpdateColor`, unload.
 - [ ] **Phase 9 — Hardening.** sUNC fallbacks, guards, docs pass, tag `v1.0.0`.
 
 ## Commit convention

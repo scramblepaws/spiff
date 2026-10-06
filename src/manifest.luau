@@ -5,6 +5,7 @@ return {
 	"util.signal",
 	"util.theme",
 	"util.filesystem",
+	"util.serialize",
 	"util.index",
 	"render.index",
 	"core.window",

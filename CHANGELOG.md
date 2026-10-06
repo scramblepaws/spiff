@@ -25,6 +25,10 @@ All notable changes to spiff are documented here. Format follows
 - Phase 7: widgets `watermark`, `notifications`, `keybindslist`, `statuslist`;
   window methods to create them; keybind elements self-register for the list.
 
+- Phase 8: `util/serialize` (Color3/EnumItem JSON codecs), `Window:GetConfig`,
+  `SaveConfig`, `LoadConfig`, `DeleteConfig`, `ListConfigs`; `Library.Theme`
+  exposed for live `UpdateColor`; config folders ensured on load.
+
 ### Skipped
 
 - Custom cursor widget: native Roblox cursors already work; a drawn cursor adds

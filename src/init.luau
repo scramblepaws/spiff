@@ -4,9 +4,13 @@ return function(ctx)
 	ctx.util = ctx.require("util.index")
 	ctx.render = ctx.require("render.index")
 
+	ctx.util.filesystem.ensure(ctx.state.folders.main)
+	ctx.util.filesystem.ensure(ctx.state.folders.configs)
+
 	local Library = {
 		_NAME = "spiff",
 		_VERSION = "0.1.0",
+		Theme = ctx.util.theme,
 	}
 
 	function Library:Unload()

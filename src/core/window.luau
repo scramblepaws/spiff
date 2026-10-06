@@ -38,7 +38,14 @@ return function(ctx)
 			ResetOnSpawn = false,
 			IgnoreGuiInset = true,
 			ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-		}, root)
+		})
+		local parented = pcall(function()
+			gui.Parent = root
+		end)
+		if not parented or not gui.Parent then
+			root = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+			gui.Parent = root
+		end
 		self.gui = gui
 
 		local main = render.frame(gui, {

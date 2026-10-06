@@ -2,6 +2,7 @@
 --   loadstring(game:HttpGet(".../spiff/main/demo.luau"))()
 local Menu = getgenv().Spiff
 assert(Menu, "[demo] Spiff not loaded; run loader.luau first")
+print("[demo] starting, spiff " .. tostring(Menu._VERSION))
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -23,6 +24,7 @@ local S = getgenv().SpiffDemo or {
 getgenv().SpiffDemo = S
 
 local win = Menu.Window({ name = "spiff demo", toggleKey = Enum.KeyCode.RightShift })
+print("[demo] window created")
 local notifications = win:Notifications()
 local notify = function(text)
 	notifications:Add({ text = text, lifetime = 4 })
@@ -228,4 +230,4 @@ UIS.JumpRequest:Connect(function()
 end)
 
 notify("spiff " .. Menu._VERSION .. " loaded - press RightShift")
-print("[demo] spiff", Menu._VERSION, "ok")
+print("[demo] spiff", Menu._VERSION, "ok -", #win.pages, "pages")

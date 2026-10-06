@@ -6,6 +6,16 @@ All notable changes to spiff are documented here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- Loader no longer silently swallows failures: it logs each stage, surfaces the
+  demo traceback via `warn`, and falls back to an inline demo window so the GUI
+  always appears.
+- Loader resolves HTTP via `HttpGet` / `HttpGetAsync` / `request` /
+  `http_request`, and `loadstring` / `load`.
+- Window parenting falls back to `PlayerGui` if `gethui()` cannot hold the
+  ScreenGui.
+
 ### Changed
 
 - `demo.luau` is now a full showcase: 4 pages, every element, all widgets, and

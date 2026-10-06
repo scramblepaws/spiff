@@ -54,7 +54,7 @@ return function(ctx)
 		end)
 
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)
-			if gpe then
+			if gpe or not row.Parent then
 				return
 			end
 			if listening then
@@ -68,7 +68,7 @@ return function(ctx)
 		end)
 
 		ctx.util.signal.connect(UIS.InputEnded, function(input)
-			if value ~= Enum.KeyCode.Unknown and input.KeyCode == value then
+			if row.Parent and value ~= Enum.KeyCode.Unknown and input.KeyCode == value then
 				if info.onrelease then
 					info.onrelease(false)
 				end

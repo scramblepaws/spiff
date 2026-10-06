@@ -7,7 +7,7 @@ Feature/feel is modeled on [Octernal Lib](https://github.com/ro0ti/Roblox-Script
 (window, pages, sections, and a full element set) but organized as composable
 modules instead of one ~5,500-line script.
 
-- **Status:** scaffold (see [docs/ROADMAP.md](docs/ROADMAP.md))
+- **Status:** v1.0.0 (see [docs/ROADMAP.md](docs/ROADMAP.md), [docs/API.md](docs/API.md))
 - **Runs in:** Roblox executors supporting the sUNC/UNC API (`loadstring`,
   `HttpGet`, `gethui`, `cloneref`, filesystem functions)
 - **Rendering:** native `Instance`s (`ScreenGui` / `Frame`), not the `Drawing` API

@@ -9,7 +9,7 @@ return function(ctx)
 
 	local Library = {
 		_NAME = "spiff",
-		_VERSION = "0.1.0",
+		_VERSION = "1.0.0",
 		Theme = ctx.util.theme,
 	}
 

@@ -94,14 +94,21 @@ return function(ctx)
 		local dragging = false
 		ctx.util.signal.connect(grip.InputBegan, function(input)
 			if
-				input.UserInputType == Enum.UserInputType.MouseButton1
-				or input.UserInputType == Enum.UserInputType.Touch
+				row.Parent
+				and (
+					input.UserInputType == Enum.UserInputType.MouseButton1
+					or input.UserInputType == Enum.UserInputType.Touch
+				)
 			then
 				dragging = true
 				fromInput(input)
 			end
 		end)
 		ctx.util.signal.connect(UIS.InputChanged, function(input)
+			if not row.Parent then
+				dragging = false
+				return
+			end
 			if
 				dragging
 				and (

@@ -4,7 +4,7 @@ All notable changes to spiff are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is
 [SemVer](https://semver.org/).
 
-## [Unreleased]
+## [1.0.0] - 2026-10-06
 
 ### Added
 
@@ -33,6 +33,9 @@ All notable changes to spiff are documented here. Format follows
 
 - Custom cursor widget: native Roblox cursors already work; a drawn cursor adds
   nothing here. Add only if a Drawing backend lands.
+
+- Phase 9: destroy guards on window toggle/drag and slider/keybind input
+  handlers; `Window:Destroy` sets a `destroyed` flag; `docs/API.md`.
 
 ### Verified
 

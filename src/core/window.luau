@@ -27,6 +27,7 @@ return function(ctx)
 		self.pages = {}
 		self.currentPage = nil
 		self.visible = true
+		self.destroyed = false
 		self.toggleKey = info.toggleKey or info.Key or Enum.KeyCode.RightShift
 		local size = info.size or Vector2.new(520, 380)
 
@@ -57,6 +58,7 @@ return function(ctx)
 			Name = "Top",
 			Size = UDim2.new(1, 0, 0, 30),
 			BackgroundColor3 = theme.background,
+			Active = true,
 		})
 		render.corner(top, 6)
 		self.top = top
@@ -101,7 +103,7 @@ return function(ctx)
 
 		-- toggle key
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)
-			if gpe then
+			if gpe or self.destroyed then
 				return
 			end
 			if input.KeyCode == self.toggleKey then
@@ -113,17 +115,22 @@ return function(ctx)
 		local dragging, dragStart, startPos = false, nil, nil
 		ctx.util.signal.connect(top.InputBegan, function(input)
 			if
-				input.UserInputType == Enum.UserInputType.MouseButton1
-				or input.UserInputType == Enum.UserInputType.Touch
+				self.destroyed
+				or not (
+					input.UserInputType == Enum.UserInputType.MouseButton1
+					or input.UserInputType == Enum.UserInputType.Touch
+				)
 			then
-				dragging = true
-				dragStart = input.Position
-				startPos = main.Position
+				return
 			end
+			dragging = true
+			dragStart = input.Position
+			startPos = main.Position
 		end)
 		ctx.util.signal.connect(UIS.InputChanged, function(input)
 			if
 				not dragging
+				or self.destroyed
 				or not (
 					input.UserInputType == Enum.UserInputType.MouseMovement
 					or input.UserInputType == Enum.UserInputType.Touch
@@ -153,16 +160,25 @@ return function(ctx)
 	end
 
 	function Window:Show()
+		if self.destroyed then
+			return
+		end
 		self.visible = true
 		self.main.Visible = true
 	end
 
 	function Window:Hide()
+		if self.destroyed then
+			return
+		end
 		self.visible = false
 		self.main.Visible = false
 	end
 
 	function Window:Toggle()
+		if self.destroyed then
+			return
+		end
 		if self.visible then
 			self:Hide()
 		else
@@ -263,6 +279,7 @@ return function(ctx)
 	end
 
 	function Window:Destroy()
+		self.destroyed = true
 		if self.gui then
 			self.gui:Destroy()
 			self.gui = nil

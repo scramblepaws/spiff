@@ -57,6 +57,22 @@ assert(keybind:Get() == Enum.KeyCode.E, "[smoke] keybind initial")
 keybind:Set(Enum.KeyCode.Q)
 assert(keybind:Get() == Enum.KeyCode.Q, "[smoke] keybind Set/Get")
 
+local colorpicker = sec:AddColorpicker({ name = "C", value = Color3.fromRGB(255, 0, 0) })
+assert(typeof(colorpicker:Get()) == "Color3", "[smoke] colorpicker Get not a Color3")
+colorpicker:Set(Color3.fromRGB(0, 255, 0))
+assert(colorpicker:Get().G > 0.5, "[smoke] colorpicker Set did not apply green")
+
+local listbox = sec:AddListbox({ name = "L", options = { "a", "b", "c" } })
+assert(listbox:Get() == "a", "[smoke] listbox initial")
+listbox:Set("b")
+assert(listbox:Get() == "b", "[smoke] listbox Set/Get")
+
+local configbox = sec:AddConfigbox({ name = "Cfg" })
+assert(configbox:Get() == "default", "[smoke] configbox default")
+
+local holder = sec:AddButtonholder({ name = "H", buttons = { { name = "A" } } })
+assert(type(holder.Add) == "function", "[smoke] buttonholder Add missing")
+
 win:Destroy()
 assert(win.gui == nil, "[smoke] window:Destroy did not clear gui")
 

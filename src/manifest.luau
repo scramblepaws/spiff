@@ -19,5 +19,9 @@ return {
 	"elements.dropdown",
 	"elements.multibox",
 	"elements.keybind",
+	"elements.colorpicker",
+	"elements.listbox",
+	"elements.configbox",
+	"elements.buttonholder",
 	"init",
 }

@@ -20,6 +20,8 @@ All notable changes to spiff are documented here. Format follows
   `slider`; `:Set`/`:Get`/`:Destroy` on each.
 - Phase 5: `elements/textbox`, `dropdown`, `multibox` (inline expand), `keybind`
   (click-to-rebind + press/release hooks); `render.textbox` primitive.
+- Phase 6: `elements/colorpicker` (HSV, reuses the slider), `listbox`, `configbox`,
+  `buttonholder`.
 
 ### Verified
 

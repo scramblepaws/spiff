@@ -26,6 +26,16 @@ general:AddMultibox({ name = "Extras", options = { "ESP", "Aim", "Fly" }, callba
 	print("[demo] extras", table.concat(v, ","))
 end })
 general:AddKeybind({ name = "Toggle UI", value = Enum.KeyCode.RightShift })
+general:AddColorpicker({ name = "Accent", value = Color3.fromRGB(178, 156, 255), callback = function(c)
+	Menu.Theme:UpdateColor("accent", c)
+end })
+general:AddListbox({ name = "Loadout", options = { "Default", "Sniper", "Rusher" }, callback = function(v)
+	print("[demo] loadout", v)
+end })
+general:AddButtonholder({ name = "Quick", buttons = {
+	{ name = "A", callback = function() print("[demo] A") end },
+	{ name = "B", callback = function() print("[demo] B") end },
+} })
 
 local settings = win:Page({ name = "Settings" })
 settings:Section({ name = "Config", side = "right" })

@@ -10,6 +10,11 @@ All notable changes to spiff are documented here. Format follows
 
 - Removed all edge rounding (`render.corner` / `UICorner` deleted) to match
   Octernal's square panels.
+- Elements restyled to Octernal's layout: toggles are a 15px checkbox on the
+  left + label (no row box), buttons are full-width centered controls with a
+  hover brighten, sliders put the value on the track, textboxes/dropdowns/
+  keybinds are full-width bordered controls, colorpickers are name + right
+  swatch. Section accent is now a flush full-width top line.
 - Restyled to Octernal Lib's design plan: layered borders
   (outline -> accent -> lightcontrast body; inline -> outline -> darkcontrast
   content), accent top strip on sections, black-outlined text, and the Octernal

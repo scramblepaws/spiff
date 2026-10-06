@@ -40,10 +40,12 @@ return function(ctx)
 		render.padding(frame, 6, 6)
 		self.frame = frame
 
+		-- full-width accent line flush to the top edge (offset back out of the padding)
 		local accent = render.frame(frame, {
-			Size = UDim2.new(1, 0, 0, 1),
-			Position = UDim2.new(0, 0, 0, 0),
+			Size = UDim2.new(1, 12, 0, 1),
+			Position = UDim2.new(0, -6, 0, -6),
 			BackgroundColor3 = theme.accent,
+			ZIndex = 2,
 		})
 		theme:Track(accent, "BackgroundColor3", "accent")
 

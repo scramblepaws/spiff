@@ -1,4 +1,4 @@
--- elements/listbox.luau | scrollable single-select list
+-- elements/listbox.luau | Octernal: bordered scrolling single-select list
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -11,11 +11,11 @@ return function(ctx)
 		local options = info.options or info.Options or {}
 		local value = info.value or info.Value or options[1]
 
-		local row = base.row(section, { name = info.name or "Listbox", height = info.height or 120 })
+		local row = base.control(section, info.height or 120, theme.darkcontrast)
 		local scroll = render.scroll(row)
-		scroll.Position = UDim2.new(0, 8, 0, 20)
-		scroll.Size = UDim2.new(1, -16, 1, -26)
-		render.list(scroll, { padding = 2 })
+		scroll.Position = UDim2.new(0, 1, 0, 1)
+		scroll.Size = UDim2.new(1, -2, 1, -2)
+		render.list(scroll, { padding = 0 })
 
 		local buttons = {}
 		local function highlight()
@@ -33,6 +33,7 @@ return function(ctx)
 				LayoutOrder = i,
 				BackgroundTransparency = 1,
 			})
+			render.padding(btn, 6, 0)
 			buttons[opt] = btn
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				api:Set(opt)

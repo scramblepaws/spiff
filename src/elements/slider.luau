@@ -1,4 +1,4 @@
--- elements/slider.luau | numeric drag bar with optional step/decimals
+-- elements/slider.luau | Octernal: title above a full-width track, value on the track
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -12,38 +12,35 @@ return function(ctx)
 		local min = info.min or info.Min or 0
 		local max = info.max or info.Max or 100
 		local step = info.step or info.Step or 0
-		local decimals = info.decimals or 0
+		local suffix = info.suffix or info.Suffix or ""
 		local value = info.value or info.Value or min
 
-		local row, label = base.row(section, { name = info.name or "Slider", height = 36 })
-		label.Position = UDim2.new(0, 8, 0, 2)
-		label.Size = UDim2.new(1, -100, 0, 14)
-
-		local valueLabel = render.label(row, {
-			Position = UDim2.new(1, -8, 0, 2),
-			Size = UDim2.new(0, 60, 0, 14),
-			TextXAlignment = Enum.TextXAlignment.Right,
-			Text = "0",
+		local row = base.plain(section, 27)
+		render.label(row, {
+			Text = info.name or "Slider",
+			Position = UDim2.new(0, 4, 0, 0),
+			Size = UDim2.new(1, -8, 0, 15),
 		})
-		theme:Track(valueLabel, "TextColor3", "dim")
 
 		local track = render.frame(row, {
-			Position = UDim2.new(0, 8, 1, -12),
-			Size = UDim2.new(1, -16, 0, 6),
-			BackgroundColor3 = theme.inline,
-			AnchorPoint = Vector2.new(0, 0),
+			Position = UDim2.new(0, 4, 0, 15),
+			Size = UDim2.new(1, -8, 0, 12),
+			BackgroundColor3 = theme.lightcontrast,
 		})
+		render.borders(track, theme.outline, theme.inline)
+
 		local fill = render.frame(track, {
-			Size = UDim2.new(0, 0, 1, 0),
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(0, 0, 1, -2),
 			BackgroundColor3 = theme.accent,
 		})
 		theme:Track(fill, "BackgroundColor3", "accent")
 
-		local grip = render.button(row, {
-			Position = UDim2.new(0, 8, 1, -12),
-			Size = UDim2.new(1, -16, 0, 6),
-			BackgroundTransparency = 1,
-			Text = "",
+		local valueLabel = render.label(track, {
+			Size = UDim2.new(1, 0, 1, 0),
+			TextXAlignment = Enum.TextXAlignment.Center,
+			TextYAlignment = Enum.TextYAlignment.Center,
+			Text = "0",
 		})
 
 		local function alpha()
@@ -54,14 +51,12 @@ return function(ctx)
 		end
 
 		local function display()
-			if decimals > 0 then
-				return string.format("%." .. decimals .. "f", value)
-			end
-			return tostring(ctx.util.math.round(value))
+			local rounded = ctx.util.math.round(value * 100) / 100
+			return tostring(rounded) .. suffix .. "/" .. tostring(max) .. suffix
 		end
 
 		local function refresh()
-			fill.Size = UDim2.new(alpha(), 0, 1, 0)
+			fill.Size = UDim2.new(alpha(), 0, 1, -2)
 			valueLabel.Text = display()
 		end
 
@@ -85,12 +80,17 @@ return function(ctx)
 
 		local function fromInput(input)
 			local rel = (input.Position.X - track.AbsolutePosition.X) / math.max(track.AbsoluteSize.X, 1)
-			rel = math.clamp(rel, 0, 1)
-			api:Set(min + (max - min) * rel)
+			api:Set(min + (max - min) * math.clamp(rel, 0, 1))
 		end
 
 		local dragging = false
-		ctx.util.signal.connect(grip.InputBegan, function(input)
+		local hit = render.button(row, {
+			Position = UDim2.new(0, 0, 0, 15),
+			Size = UDim2.new(1, 0, 0, 12),
+			BackgroundTransparency = 1,
+			Text = "",
+		})
+		ctx.util.signal.connect(hit.InputBegan, function(input)
 			if
 				row.Parent
 				and (

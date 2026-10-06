@@ -1,4 +1,4 @@
--- elements/buttonholder.luau | a row that holds a horizontal strip of buttons
+-- elements/buttonholder.luau | Octernal: a horizontal strip of full buttons
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -8,26 +8,23 @@ return function(ctx)
 	function M.new(section, info)
 		info = info or {}
 		local api = {}
-		local row = base.row(section, { name = info.name or "", height = info.height or 26 })
 
-		local holder = render.frame(row, {
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.new(0, 0, 0, 20),
-			AutomaticSize = Enum.AutomaticSize.X,
+		local row = render.frame(section.content, {
+			Size = UDim2.new(1, 0, 0, 20),
 			BackgroundTransparency = 1,
+			LayoutOrder = base.order(section),
 		})
-		render.list(holder, { horizontal = true, padding = 4 })
+		render.list(row, { horizontal = true, padding = 4 })
 
 		function api:Add(name, callback)
-			local btn = render.button(holder, {
+			local btn = render.button(row, {
 				Text = tostring(name),
-				Size = UDim2.new(0, 64, 0, 18),
-				BackgroundColor3 = theme.accent,
+				Size = UDim2.new(0.5, -2, 1, 0),
+				BackgroundColor3 = theme.lightcontrast,
 				BackgroundTransparency = 0,
-				TextColor3 = theme.background,
-				TextSize = 12,
+				TextColor3 = theme.text,
 			})
+			render.borders(btn, theme.outline, theme.inline)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				if callback then
 					callback()

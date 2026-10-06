@@ -1,4 +1,4 @@
--- elements/textbox.luau | free text input row
+-- elements/textbox.luau | Octernal: full-width bordered input
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -9,19 +9,16 @@ return function(ctx)
 		info = info or {}
 		local api = {}
 		local value = info.value or info.Value or ""
-		local row = base.row(section, { name = info.name or "Textbox" })
+		local row = base.control(section, 20, theme.darkcontrast)
 
 		local box = render.textbox(row, {
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.new(0, 120, 0, 18),
+			Size = UDim2.new(1, -8, 1, -2),
+			Position = UDim2.new(0, 4, 0, 1),
+			BackgroundTransparency = 1,
 			Text = tostring(value),
 			PlaceholderText = info.placeholder or "type...",
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
-		render.borders(box, theme.outline, theme.inline)
-		render.padding(box, 4, 0)
-		theme:Track(box, "TextColor3", "text")
 
 		ctx.util.signal.connect(box.FocusLost, function()
 			value = box.Text

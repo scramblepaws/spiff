@@ -1,4 +1,4 @@
--- elements/dropdown.luau | single-select list that expands inline
+-- elements/dropdown.luau | Octernal: full-width box that expands inline
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -12,35 +12,40 @@ return function(ctx)
 		local value = info.value or info.Value or options[1]
 		local open = false
 
-		local row = base.row(section, { name = info.name or "Dropdown", height = 24 })
+		local row = base.control(section, 20, theme.darkcontrast)
 		row.ClipsDescendants = false
 
+		render.label(row, {
+			Text = info.name or "Dropdown",
+			Position = UDim2.new(0, 6, 0, 0),
+			Size = UDim2.new(1, -130, 1, 0),
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
 		local valueLabel = render.label(row, {
-			Position = UDim2.new(1, -24, 0, 0),
+			Text = tostring(value or ""),
+			Position = UDim2.new(1, -18, 0, 0),
 			Size = UDim2.new(0, 110, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Right,
-			Text = tostring(value or ""),
+			TextYAlignment = Enum.TextYAlignment.Center,
+			TextColor3 = theme.dim,
 		})
-		theme:Track(valueLabel, "TextColor3", "dim")
-
-		local arrow = render.label(row, {
+		render.label(row, {
 			Text = "v",
-			Position = UDim2.new(1, -14, 0, 0),
+			Position = UDim2.new(1, -12, 0, 0),
 			Size = UDim2.new(0, 10, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Right,
+			TextYAlignment = Enum.TextYAlignment.Center,
 		})
-		theme:Track(arrow, "TextColor3", "text")
-
-		local header = render.button(row, { Size = UDim2.new(1, 0, 0, 24), Text = "" })
+		local header = render.button(row, { Size = UDim2.new(1, 0, 0, 20), BackgroundTransparency = 1, Text = "" })
 
 		local holder = render.frame(row, {
-			Position = UDim2.new(0, 0, 0, 24),
+			Position = UDim2.new(0, 0, 0, 20),
 			Size = UDim2.new(1, 0, 0, 0),
-			BackgroundColor3 = theme.background,
+			BackgroundColor3 = theme.darkcontrast,
 			Visible = false,
 		})
-		render.list(holder, { padding = 2 })
-		render.padding(holder, 4, 2)
+		render.borders(holder, theme.outline, theme.inline)
+		render.list(holder, { padding = 0 })
 
 		for i, opt in ipairs(options) do
 			local option = render.button(holder, {
@@ -49,9 +54,10 @@ return function(ctx)
 				TextColor3 = theme.text,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				LayoutOrder = i,
-				BackgroundColor3 = theme.row,
+				BackgroundColor3 = theme.lightcontrast,
 				BackgroundTransparency = 0,
 			})
+			render.padding(option, 6, 0)
 			ctx.util.signal.connect(option.MouseButton1Click, function()
 				api:Set(opt)
 				api:Toggle(false)
@@ -61,7 +67,7 @@ return function(ctx)
 		function api:Toggle(state)
 			open = (state == nil) and not open or state
 			holder.Visible = open
-			row.Size = UDim2.new(1, 0, 0, open and (24 + #options * 22 + 4) or 24)
+			row.Size = UDim2.new(1, 0, 0, open and (20 + #options * 20) or 20)
 		end
 		function api:Set(v)
 			value = v

@@ -1,4 +1,4 @@
--- elements/toggle.luau | boolean switch row
+-- elements/toggle.luau | Octernal: 15px checkbox on the left + label, no row box
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -9,15 +9,21 @@ return function(ctx)
 		info = info or {}
 		local api = {}
 		local value = info.value == true
-		local row = base.row(section, { name = info.name or "Toggle" })
+		local row = base.plain(section, 19)
 
 		local box = render.frame(row, {
-			Size = UDim2.new(0, 18, 0, 18),
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			BackgroundColor3 = value and theme.accent or theme.inline,
+			Size = UDim2.fromOffset(15, 15),
+			Position = UDim2.new(0, 4, 0, 2),
+			BackgroundColor3 = value and theme.accent or theme.lightcontrast,
 		})
-		render.stroke(box, theme.outline, 1)
+		render.borders(box, theme.outline, theme.inline)
+
+		render.label(row, {
+			Text = info.name or "Toggle",
+			Position = UDim2.new(0, 23, 0, 0),
+			Size = UDim2.new(1, -30, 1, 0),
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
 
 		local click = render.button(row, {
 			Size = UDim2.new(1, 0, 1, 0),
@@ -27,7 +33,7 @@ return function(ctx)
 
 		function api:Set(v)
 			value = v == true
-			box.BackgroundColor3 = value and theme.accent or theme.inline
+			box.BackgroundColor3 = value and theme.accent or theme.lightcontrast
 			if info.callback then
 				info.callback(value)
 			end

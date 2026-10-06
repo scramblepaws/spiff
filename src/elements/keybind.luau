@@ -1,4 +1,4 @@
--- elements/keybind.luau | click to rebind, fires on key press/release
+-- elements/keybind.luau | Octernal: full-width control, name left, key right
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -12,22 +12,26 @@ return function(ctx)
 		local value = info.value or info.Value or Enum.KeyCode.Unknown
 		local listening = false
 
-		local row = base.row(section, { name = info.name or "Keybind" })
-		local btn = render.button(row, {
-			Text = value.Name,
-			Size = UDim2.new(0, 90, 0, 18),
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			BackgroundColor3 = theme.row,
-			BackgroundTransparency = 0,
-			TextColor3 = theme.text,
-			TextSize = 12,
+		local row = base.control(section, 20, theme.darkcontrast)
+		render.label(row, {
+			Text = info.name or "Keybind",
+			Position = UDim2.new(0, 6, 0, 0),
+			Size = UDim2.new(1, -110, 1, 0),
+			TextYAlignment = Enum.TextYAlignment.Center,
 		})
-		render.stroke(btn, theme.outline, 1)
+		local keyLabel = render.label(row, {
+			Text = value.Name,
+			Position = UDim2.new(1, -8, 0, 0),
+			Size = UDim2.new(0, 100, 1, 0),
+			TextXAlignment = Enum.TextXAlignment.Right,
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
+
+		local btn = render.button(row, { Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "" })
 
 		function api:Set(key)
 			value = key or Enum.KeyCode.Unknown
-			btn.Text = value.Name
+			keyLabel.Text = value.Name
 			if info.callback then
 				info.callback(value)
 			end
@@ -49,7 +53,7 @@ return function(ctx)
 
 		ctx.util.signal.connect(btn.MouseButton1Click, function()
 			listening = true
-			btn.Text = "..."
+			keyLabel.Text = "..."
 		end)
 
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)

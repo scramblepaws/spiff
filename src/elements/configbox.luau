@@ -1,5 +1,4 @@
--- elements/configbox.luau | config name field + Save/Load/Delete buttons.
--- Wires to window config methods when present, else to info callbacks.
+-- elements/configbox.luau | Octernal: name field + Create/Load/Save/Delete
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -11,18 +10,15 @@ return function(ctx)
 		local api = {}
 		local window = section.window
 
-		local row = base.row(section, { name = info.name or "Config", height = 26 })
-
+		local row = base.control(section, 20, theme.darkcontrast)
 		local field = render.textbox(row, {
-			Position = UDim2.new(0, 66, 0.5, 0),
-			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.new(0, 110, 0, 18),
+			Size = UDim2.new(1, -8, 1, -2),
+			Position = UDim2.new(0, 4, 0, 1),
+			BackgroundTransparency = 1,
 			Text = info.value or "default",
 			PlaceholderText = "config name",
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
-		render.stroke(field, theme.outline, 1)
-		render.padding(field, 4, 0)
 
 		local function name()
 			return field.Text ~= "" and field.Text or "default"
@@ -39,30 +35,28 @@ return function(ctx)
 		end
 
 		local actions = {
-			{ text = "Save", kind = "SaveConfig" },
+			{ text = "Create", kind = "SaveConfig" },
 			{ text = "Load", kind = "LoadConfig" },
-			{ text = "Del", kind = "DeleteConfig" },
+			{ text = "Save", kind = "SaveConfig" },
+			{ text = "Delete", kind = "DeleteConfig" },
 		}
 
-		local holder = render.frame(row, {
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.new(0, 0, 0, 18),
-			AutomaticSize = Enum.AutomaticSize.X,
+		local holder = render.frame(section.content, {
+			Size = UDim2.new(1, 0, 0, 20),
 			BackgroundTransparency = 1,
+			LayoutOrder = base.order(section),
 		})
 		render.list(holder, { horizontal = true, padding = 4 })
 
 		for _, action in ipairs(actions) do
 			local btn = render.button(holder, {
 				Text = action.text,
-				Size = UDim2.new(0, 42, 0, 18),
-				BackgroundColor3 = theme.row,
+				Size = UDim2.new(0.25, -3, 1, 0),
+				BackgroundColor3 = theme.lightcontrast,
 				BackgroundTransparency = 0,
 				TextColor3 = theme.text,
-				TextSize = 12,
 			})
-			render.stroke(btn, theme.outline, 1)
+			render.borders(btn, theme.outline, theme.inline)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				run(action.kind, info[action.kind])
 			end)
@@ -76,6 +70,7 @@ return function(ctx)
 		end
 		function api:Destroy()
 			row:Destroy()
+			holder:Destroy()
 		end
 
 		return base.register(api, base.autoFlag(info))

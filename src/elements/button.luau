@@ -1,4 +1,4 @@
--- elements/button.luau | clickable action row
+-- elements/button.luau | Octernal: full-width control with centered text
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -8,21 +8,26 @@ return function(ctx)
 	function M.new(section, info)
 		info = info or {}
 		local api = {}
-		local row = base.row(section, { name = info.text or info.name or "Button", height = info.height or 26 })
+		local row = base.control(section, 20, theme.lightcontrast)
+
+		local label = render.label(row, {
+			Text = info.text or info.name or "Button",
+			Size = UDim2.new(1, 0, 1, 0),
+			TextXAlignment = Enum.TextXAlignment.Center,
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
 
 		local btn = render.button(row, {
-			Text = info.action or "Run",
-			Size = UDim2.new(0, 64, 0, 18),
-			Position = UDim2.new(1, -8, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			BackgroundColor3 = theme.accent,
-			BackgroundTransparency = 0,
-			TextColor3 = theme.background,
-			TextSize = 12,
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = "",
 		})
-		theme:Track(btn, "BackgroundColor3", "accent")
-		theme:Track(btn, "TextColor3", "background")
-
+		ctx.util.signal.connect(btn.MouseEnter, function()
+			row.BackgroundColor3 = theme.inline
+		end)
+		ctx.util.signal.connect(btn.MouseLeave, function()
+			row.BackgroundColor3 = theme.lightcontrast
+		end)
 		ctx.util.signal.connect(btn.MouseButton1Click, function()
 			if info.callback then
 				info.callback()
@@ -30,10 +35,10 @@ return function(ctx)
 		end)
 
 		function api:Set(text)
-			btn.Text = tostring(text)
+			label.Text = tostring(text)
 		end
 		function api:Get()
-			return btn.Text
+			return label.Text
 		end
 		function api:Destroy()
 			row:Destroy()

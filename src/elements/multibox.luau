@@ -1,4 +1,4 @@
--- elements/multibox.luau | multi-select list that expands inline
+-- elements/multibox.luau | Octernal: dropdown that selects many
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -16,26 +16,39 @@ return function(ctx)
 		end
 		local open = false
 
-		local row = base.row(section, { name = info.name or "Multibox", height = 24 })
+		local row = base.control(section, 20, theme.darkcontrast)
 		row.ClipsDescendants = false
 
+		render.label(row, {
+			Text = info.name or "Multibox",
+			Position = UDim2.new(0, 6, 0, 0),
+			Size = UDim2.new(1, -130, 1, 0),
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
 		local valueLabel = render.label(row, {
-			Position = UDim2.new(1, -24, 0, 0),
+			Position = UDim2.new(1, -18, 0, 0),
 			Size = UDim2.new(0, 110, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Right,
+			TextYAlignment = Enum.TextYAlignment.Center,
+			TextColor3 = theme.dim,
 		})
-		theme:Track(valueLabel, "TextColor3", "dim")
-
-		local header = render.button(row, { Size = UDim2.new(1, 0, 0, 24), Text = "" })
+		render.label(row, {
+			Text = "v",
+			Position = UDim2.new(1, -12, 0, 0),
+			Size = UDim2.new(0, 10, 1, 0),
+			TextXAlignment = Enum.TextXAlignment.Right,
+			TextYAlignment = Enum.TextYAlignment.Center,
+		})
+		local header = render.button(row, { Size = UDim2.new(1, 0, 0, 20), BackgroundTransparency = 1, Text = "" })
 
 		local holder = render.frame(row, {
-			Position = UDim2.new(0, 0, 0, 24),
+			Position = UDim2.new(0, 0, 0, 20),
 			Size = UDim2.new(1, 0, 0, 0),
-			BackgroundColor3 = theme.background,
+			BackgroundColor3 = theme.darkcontrast,
 			Visible = false,
 		})
-		render.list(holder, { padding = 2 })
-		render.padding(holder, 4, 2)
+		render.borders(holder, theme.outline, theme.inline)
+		render.list(holder, { padding = 0 })
 
 		local optionButtons = {}
 		for i, opt in ipairs(options) do
@@ -45,9 +58,10 @@ return function(ctx)
 				TextColor3 = theme.text,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				LayoutOrder = i,
-				BackgroundColor3 = theme.row,
+				BackgroundColor3 = theme.lightcontrast,
 				BackgroundTransparency = 0,
 			})
+			render.padding(option, 6, 0)
 			optionButtons[i] = option
 			ctx.util.signal.connect(option.MouseButton1Click, function()
 				selected[i] = not selected[i]
@@ -74,7 +88,7 @@ return function(ctx)
 		function api:Toggle(state)
 			open = (state == nil) and not open or state
 			holder.Visible = open
-			row.Size = UDim2.new(1, 0, 0, open and (24 + #options * 22 + 4) or 24)
+			row.Size = UDim2.new(1, 0, 0, open and (20 + #options * 20) or 20)
 		end
 		function api:Set(v)
 			for i = 1, #options do

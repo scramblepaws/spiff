@@ -1,4 +1,4 @@
--- elements/configbox.luau | Octernal: name field + Create/Load/Save/Delete
+-- elements/configbox.luau | config name field + Create/Load/Save/Delete
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -9,9 +9,10 @@ return function(ctx)
 		info = info or {}
 		local api = {}
 		local window = section.window
+		local axis = section.axis
 
-		local row = base.control(section, 20, theme.darkcontrast)
-		local field = render.textbox(row, {
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(1, -8, 0, 20), theme.outline, theme.inline, theme.darkcontrast)
+		local field = render.textbox(fill, {
 			Size = UDim2.new(1, -8, 1, -2),
 			Position = UDim2.new(0, 4, 0, 1),
 			BackgroundTransparency = 1,
@@ -41,20 +42,21 @@ return function(ctx)
 			{ text = "Delete", kind = "DeleteConfig" },
 		}
 
-		local holder = render.frame(section.content, {
-			Size = UDim2.new(1, 0, 0, 20),
+		local btnRow = render.frame(section.frame, {
+			Position = UDim2.new(0, 4, 0, axis + 20),
+			Size = UDim2.new(1, -8, 0, 20),
 			BackgroundTransparency = 1,
-			LayoutOrder = base.order(section),
 		})
-		render.list(holder, { horizontal = true, padding = 4 })
+		render.list(btnRow, { horizontal = true, padding = 4 })
 
 		for _, action in ipairs(actions) do
-			local btn = render.button(holder, {
+			local btn = render.button(btnRow, {
 				Text = action.text,
 				Size = UDim2.new(0.25, -3, 1, 0),
-				TextColor3 = theme.text,
+				BackgroundColor3 = theme.inline,
+				BackgroundTransparency = 0,
+				TextColor3 = theme.textcolor,
 			})
-			render.shade(btn, Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29))
 			render.borders(btn, theme.outline)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				run(action.kind, info[action.kind])
@@ -68,10 +70,11 @@ return function(ctx)
 			return field.Text
 		end
 		function api:Destroy()
-			row:Destroy()
-			holder:Destroy()
+			outer:Destroy()
+			btnRow:Destroy()
 		end
 
+		base.advance(section, 40)
 		return base.register(api, base.autoFlag(info))
 	end
 

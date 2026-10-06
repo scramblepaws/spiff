@@ -1,4 +1,4 @@
--- elements/listbox.luau | Octernal: bordered scrolling single-select list
+-- elements/listbox.luau | bordered scrolling single-select list
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -10,9 +10,11 @@ return function(ctx)
 		local api = {}
 		local options = info.options or info.Options or {}
 		local value = info.value or info.Value or options[1]
+		local axis = section.axis
+		local h = info.height or 100
 
-		local row = base.control(section, info.height or 120, theme.darkcontrast)
-		local scroll = render.scroll(row)
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(1, -8, 0, h), theme.outline, theme.inline, theme.darkcontrast)
+		local scroll = render.scroll(fill)
 		scroll.Position = UDim2.new(0, 1, 0, 1)
 		scroll.Size = UDim2.new(1, -2, 1, -2)
 		render.list(scroll, { padding = 0 })
@@ -20,7 +22,7 @@ return function(ctx)
 		local buttons = {}
 		local function highlight()
 			for opt, btn in pairs(buttons) do
-				btn.TextColor3 = (opt == value) and theme.accent or theme.text
+				btn.TextColor3 = (opt == value) and theme.accent or theme.textcolor
 			end
 		end
 
@@ -28,7 +30,7 @@ return function(ctx)
 			local btn = render.button(scroll, {
 				Text = tostring(opt),
 				Size = UDim2.new(1, 0, 0, 18),
-				TextColor3 = theme.text,
+				TextColor3 = theme.textcolor,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				LayoutOrder = i,
 				BackgroundTransparency = 1,
@@ -51,10 +53,11 @@ return function(ctx)
 			return value
 		end
 		function api:Destroy()
-			row:Destroy()
+			outer:Destroy()
 		end
 
 		highlight()
+		base.advance(section, h)
 		return base.register(api, base.autoFlag(info))
 	end
 

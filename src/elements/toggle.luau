@@ -1,4 +1,4 @@
--- elements/toggle.luau | Octernal: 15px checkbox on the left + label, no row box
+-- elements/toggle.luau | 15px checkbox at the left + label, accent when on
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -9,40 +9,24 @@ return function(ctx)
 		info = info or {}
 		local api = {}
 		local value = info.value == true
-		local row = base.plain(section, 19)
+		local axis = section.axis
 
-		local box = render.frame(row, {
-			Size = UDim2.fromOffset(15, 15),
-			Position = UDim2.new(0, 4, 0, 2),
-		})
-		local boxGrad = render.shade(box, Color3.fromRGB(32, 32, 32), Color3.fromRGB(20, 20, 20))
-		render.borders(box, theme.outline)
-		local function paint(on)
-			if on then
-				local a = theme.accent
-				render.setShade(boxGrad, a, Color3.new(a.R * 0.6, a.G * 0.6, a.B * 0.6))
-			else
-				render.setShade(boxGrad, Color3.fromRGB(32, 32, 32), Color3.fromRGB(20, 20, 20))
-			end
-		end
-		paint(value)
-
-		render.label(row, {
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(0, 15, 0, 15), theme.outline, theme.inline, value and theme.accent or theme.lightcontrast)
+		local label = render.label(section.frame, {
 			Text = info.name or "Toggle",
-			Position = UDim2.new(0, 23, 0, 0),
-			Size = UDim2.new(1, -30, 1, 0),
-			TextYAlignment = Enum.TextYAlignment.Center,
+			Position = UDim2.new(0, 23, 0, axis + 7),
+			Size = UDim2.new(1, -30, 0, 15),
 		})
-
-		local click = render.button(row, {
-			Size = UDim2.new(1, 0, 1, 0),
+		local click = render.button(section.frame, {
+			Position = UDim2.new(0, 0, 0, axis),
+			Size = UDim2.new(1, 0, 0, 15),
 			BackgroundTransparency = 1,
 			Text = "",
 		})
 
 		function api:Set(v)
 			value = v == true
-			paint(value)
+			fill.BackgroundColor3 = value and theme.accent or theme.lightcontrast
 			if info.callback then
 				info.callback(value)
 			end
@@ -51,13 +35,16 @@ return function(ctx)
 			return value
 		end
 		function api:Destroy()
-			row:Destroy()
+			outer:Destroy()
+			label:Destroy()
+			click:Destroy()
 		end
 
 		ctx.util.signal.connect(click.MouseButton1Click, function()
 			api:Set(not value)
 		end)
 
+		base.advance(section, 15)
 		return base.register(api, base.autoFlag(info))
 	end
 

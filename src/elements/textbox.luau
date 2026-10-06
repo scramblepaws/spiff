@@ -1,4 +1,4 @@
--- elements/textbox.luau | Octernal: full-width bordered input
+-- elements/textbox.luau | full-width outline->inline->darkcontrast input
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -9,14 +9,15 @@ return function(ctx)
 		info = info or {}
 		local api = {}
 		local value = info.value or info.Value or ""
-		local row = base.control(section, 20, theme.darkcontrast)
+		local axis = section.axis
 
-		local box = render.textbox(row, {
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(1, -8, 0, 20), theme.outline, theme.inline, theme.darkcontrast)
+		local box = render.textbox(fill, {
 			Size = UDim2.new(1, -8, 1, -2),
 			Position = UDim2.new(0, 4, 0, 1),
 			BackgroundTransparency = 1,
 			Text = tostring(value),
-			PlaceholderText = info.placeholder or "type...",
+			PlaceholderText = info.placeholder or "",
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
 
@@ -35,9 +36,11 @@ return function(ctx)
 			return value
 		end
 		function api:Destroy()
-			row:Destroy()
+			outer:Destroy()
+			box:Destroy()
 		end
 
+		base.advance(section, 20)
 		return base.register(api, base.autoFlag(info))
 	end
 

@@ -12,9 +12,11 @@ All notable changes to spiff are documented here. Format follows
   Octernal's square panels.
 - Window autoscales to the viewport height via `UIScale`; single 1px borders
   (the 2px double stroke looked off); tighter 4px section padding.
-- Premium pass: Gotham font at 14px, vertical gradients on the body, sections,
-  controls, tabs, buttons, toggles and sliders; drop shadow behind the window;
-  accent underline beneath the title bar; button/tab hover shades.
+- Carbon-copy restyle of Octernal Lib: exact triple-nested 1px frame stacks
+  (outline -> inline -> fill) on every panel/control, manual y-axis section
+  layout (axis 20, 4px gaps), checkbox-left toggles, value-on-track sliders,
+  tab buttons at 21px in the dark back, content well at y=24, outlined text,
+  and the verbatim palette. Removed gradients/shadow.
 - Elements restyled to Octernal's layout: toggles are a 15px checkbox on the
   left + label (no row box), buttons are full-width centered controls with a
   hover brighten, sliders put the value on the track, textboxes/dropdowns/

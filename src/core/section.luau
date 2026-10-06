@@ -1,5 +1,5 @@
--- core/section.luau | Octernal-style panel: dark fill, inline+outline border,
--- accent top strip, holding elements on the left or right column.
+-- core/section.luau | Octernal section: inline -> outline -> darkcontrast,
+-- 1px accent top line, manual y-axis layout for elements.
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -29,45 +29,46 @@ return function(ctx)
 		self.window = page.window
 		self.name = info.name or "Section"
 		self.side = info.side == "right" and "right" or "left"
+		self.axis = 20
 
-		local parent = self.side == "right" and page.right or page.left
-		local frame = render.frame(parent, {
-			Size = UDim2.new(1, 0, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
+		local outer = render.frame(page.content, {
+			Position = UDim2.new(self.side == "right" and 0.5 or 0, self.side == "right" and 2 or 5, 0, 5 + page.sectionOffsets[self.side]),
+			Size = UDim2.new(0.5, -7, 0, 22),
+			BackgroundColor3 = theme.inline,
 		})
-		render.shade(frame, Color3.fromRGB(31, 31, 31), Color3.fromRGB(20, 20, 20))
-		render.borders(frame, theme.inline)
-		render.padding(frame, 4, 4)
-		self.frame = frame
-
-		-- full-width accent line flush to the top edge (offset back out of the padding)
-		local accent = render.frame(frame, {
-			Size = UDim2.new(1, 8, 0, 2),
-			Position = UDim2.new(0, -4, 0, -4),
+		self.outer = outer
+		local outline = render.frame(outer, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.outline,
+		})
+		self.outline = outline
+		local inner = render.frame(outline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.darkcontrast,
+		})
+		self.frame = inner
+		local accent = render.frame(inner, {
+			Size = UDim2.new(1, 0, 0, 1),
 			BackgroundColor3 = theme.accent,
-			ZIndex = 2,
 		})
 		theme:Track(accent, "BackgroundColor3", "accent")
-
-		local title = render.label(frame, {
+		local title = render.label(inner, {
 			Text = self.name,
-			Position = UDim2.new(0, 0, 0, 4),
-			Size = UDim2.new(1, 0, 0, 15),
-			TextXAlignment = Enum.TextXAlignment.Left,
+			Position = UDim2.new(0, 3, 0, 3),
+			Size = UDim2.new(1, -6, 0, 15),
 		})
-		theme:Track(title, "TextColor3", "text")
+		theme:Track(title, "TextColor3", "textcolor")
 		self.title = title
 
-		local content = render.frame(frame, {
-			Position = UDim2.new(0, 0, 0, 18),
-			Size = UDim2.new(1, 0, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
-			BackgroundTransparency = 1,
-		})
-		render.list(content, { padding = 4, sortOrder = Enum.SortOrder.LayoutOrder })
-		self.content = content
-
+		page.sectionOffsets[self.side] = page.sectionOffsets[self.side] + 105
+		self:Update()
 		return self
+	end
+
+	function Section:Update()
+		self.outer.Size = UDim2.new(0.5, -7, 0, self.axis + 4)
 	end
 
 	function Section:Add(kind, info)
@@ -83,16 +84,15 @@ return function(ctx)
 		Section["Add" .. api] = method
 		Section[api] = method -- reference-style: section:Toggle(...)
 	end
-	-- accept alternate capitalisations
 	Section.AddButtonholder = Section.AddButtonHolder
 	Section.Buttonholder = Section.ButtonHolder
 	Section.AddConfigbox = Section.AddConfigBox
 	Section.Configbox = Section.ConfigBox
 
 	function Section:Destroy()
-		if self.frame then
-			self.frame:Destroy()
-			self.frame = nil
+		if self.outer then
+			self.outer:Destroy()
+			self.outer = nil
 		end
 	end
 

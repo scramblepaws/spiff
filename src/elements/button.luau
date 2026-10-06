@@ -1,4 +1,4 @@
--- elements/button.luau | Octernal: full-width control with centered text
+-- elements/button.luau | full-width outline->inline->lightcontrast button, centered text
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -8,27 +8,28 @@ return function(ctx)
 	function M.new(section, info)
 		info = info or {}
 		local api = {}
-		local row, grad = base.control(section, 22, theme.lightcontrast)
+		local axis = section.axis
 
-		local label = render.label(row, {
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(1, -8, 0, 20), theme.outline, theme.inline, theme.lightcontrast)
+		local label = render.label(fill, {
 			Text = info.text or info.name or "Button",
 			Size = UDim2.new(1, 0, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
 		})
-
-		local btn = render.button(row, {
-			Size = UDim2.new(1, 0, 1, 0),
+		local click = render.button(section.frame, {
+			Position = UDim2.new(0, 4, 0, axis),
+			Size = UDim2.new(1, -8, 0, 20),
 			BackgroundTransparency = 1,
 			Text = "",
 		})
-		ctx.util.signal.connect(btn.MouseEnter, function()
-			render.setShade(grad, Color3.fromRGB(58, 58, 58), Color3.fromRGB(38, 38, 38))
+		ctx.util.signal.connect(click.MouseEnter, function()
+			fill.BackgroundColor3 = theme.inline
 		end)
-		ctx.util.signal.connect(btn.MouseLeave, function()
-			render.setShade(grad, Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29))
+		ctx.util.signal.connect(click.MouseLeave, function()
+			fill.BackgroundColor3 = theme.lightcontrast
 		end)
-		ctx.util.signal.connect(btn.MouseButton1Click, function()
+		ctx.util.signal.connect(click.MouseButton1Click, function()
 			if info.callback then
 				info.callback()
 			end
@@ -41,9 +42,12 @@ return function(ctx)
 			return label.Text
 		end
 		function api:Destroy()
-			row:Destroy()
+			outer:Destroy()
+			label:Destroy()
+			click:Destroy()
 		end
 
+		base.advance(section, 20)
 		return base.register(api, info.flag)
 	end
 

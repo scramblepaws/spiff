@@ -1,4 +1,4 @@
--- elements/colorpicker.luau | Octernal: name + right swatch, expands to H/S/V sliders
+-- elements/colorpicker.luau | name + right swatch; expands to H/S/V sliders below
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -11,42 +11,38 @@ return function(ctx)
 		local api = {}
 		local value = info.value or info.Value or Color3.new(1, 1, 1)
 		local syncing = false
-		local open = false
+		local axis = section.axis
 
-		local row = base.plain(section, 19)
-
-		render.label(row, {
+		render.label(section.frame, {
 			Text = info.name or "Color",
-			Position = UDim2.new(0, 4, 0, 0),
-			Size = UDim2.new(1, -44, 1, 0),
-			TextYAlignment = Enum.TextYAlignment.Center,
+			Position = UDim2.new(0, 4, 0, axis),
+			Size = UDim2.new(1, -44, 0, 15),
 		})
-		local swatch = render.frame(row, {
-			Size = UDim2.fromOffset(30, 15),
-			Position = UDim2.new(1, -34, 0, 2),
-			BackgroundColor3 = value,
+		local swatchOuter, _, swatch = base.stack(section.frame, UDim2.new(1, -34, 0, axis), UDim2.new(0, 30, 0, 15), theme.outline, theme.inline, Color3.new(1, 1, 1))
+		swatch.BackgroundColor3 = value
+		local header = render.button(section.frame, {
+			Position = UDim2.new(0, 0, 0, axis),
+			Size = UDim2.new(1, 0, 0, 15),
+			BackgroundTransparency = 1,
+			Text = "",
 		})
-		render.borders(swatch, theme.outline, theme.inline)
 
-		local header = render.button(row, { Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "" })
-
-		local holder = render.frame(row, {
-			Position = UDim2.new(0, 0, 0, 19),
-			Size = UDim2.new(1, 0, 0, 0),
-			BackgroundColor3 = theme.darkcontrast,
+		local holder = render.frame(section.frame, {
+			Position = UDim2.new(0, 4, 0, axis + 15),
+			Size = UDim2.new(1, -8, 0, 109),
+			BackgroundTransparency = 1,
 			Visible = false,
 		})
-		render.borders(holder, theme.outline, theme.inline)
-		render.list(holder, { padding = 4 })
-		render.padding(holder, 6, 6)
-
-		local preview = render.frame(holder, {
-			Size = UDim2.new(1, 0, 0, 15),
-			BackgroundColor3 = value,
-		})
-		render.borders(preview, theme.outline, theme.inline)
+		local _, _, preview = base.stack(holder, UDim2.new(0, 0, 0, 0), UDim2.new(1, 0, 0, 15), theme.outline, theme.inline, Color3.new(1, 1, 1))
+		preview.BackgroundColor3 = value
 
 		local h, s, v = value:ToHSV()
+
+		local fake = setmetatable({ frame = holder, axis = 19, side = "left" }, {
+			__index = {
+				Update = function() end,
+			},
+		})
 
 		local function apply()
 			value = Color3.fromHSV(h, s, v)
@@ -57,26 +53,21 @@ return function(ctx)
 			end
 		end
 
-		local fake = { content = holder }
-		local sliderH = Slider.new(fake, { name = "H", min = 0, max = 1, value = h, callback = function(nv)
+		local sliderH = Slider.new(fake, { name = "H", min = 0, max = 1, value = h, flag = "", callback = function(nv)
 			h = nv
 			apply()
 		end })
-		local sliderS = Slider.new(fake, { name = "S", min = 0, max = 1, value = s, callback = function(nv)
+		local sliderS = Slider.new(fake, { name = "S", min = 0, max = 1, value = s, flag = "", callback = function(nv)
 			s = nv
 			apply()
 		end })
-		local sliderV = Slider.new(fake, { name = "V", min = 0, max = 1, value = v, callback = function(nv)
+		local sliderV = Slider.new(fake, { name = "V", min = 0, max = 1, value = v, flag = "", callback = function(nv)
 			v = nv
 			apply()
 		end })
 
-		local holderHeight = 15 + 3 * 31 + 12
-
 		function api:Toggle(state)
-			open = (state == nil) and not open or state
-			holder.Visible = open
-			row.Size = UDim2.new(1, 0, 0, open and (19 + holderHeight) or 19)
+			holder.Visible = (state == nil) and not holder.Visible or state
 		end
 		function api:Set(color)
 			syncing = true
@@ -95,13 +86,16 @@ return function(ctx)
 			sliderH:Destroy()
 			sliderS:Destroy()
 			sliderV:Destroy()
-			row:Destroy()
+			swatchOuter:Destroy()
+			header:Destroy()
+			holder:Destroy()
 		end
 
 		ctx.util.signal.connect(header.MouseButton1Click, function()
 			api:Toggle()
 		end)
 
+		base.advance(section, 15)
 		return base.register(api, base.autoFlag(info))
 	end
 

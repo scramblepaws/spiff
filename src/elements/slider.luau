@@ -1,4 +1,4 @@
--- elements/slider.luau | Octernal: title above a full-width track, value on the track
+-- elements/slider.luau | title above a full-width track, value centered on it
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -14,35 +14,30 @@ return function(ctx)
 		local step = info.step or info.Step or 0
 		local suffix = info.suffix or info.Suffix or ""
 		local value = info.value or info.Value or min
+		local axis = section.axis
 
-		local row = base.plain(section, 27)
-		render.label(row, {
+		local title = render.label(section.frame, {
 			Text = info.name or "Slider",
-			Position = UDim2.new(0, 4, 0, 0),
+			Position = UDim2.new(0, 4, 0, axis),
 			Size = UDim2.new(1, -8, 0, 15),
 		})
-
-		local track = render.frame(row, {
-			Position = UDim2.new(0, 4, 0, 15),
-			Size = UDim2.new(1, -8, 0, 12),
-		})
-		render.shade(track, Color3.fromRGB(30, 30, 30), Color3.fromRGB(17, 17, 17))
-		render.borders(track, theme.outline)
-
-		local fill = render.frame(track, {
+		local outer, mid, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis + 15), UDim2.new(1, -8, 0, 12), theme.outline, theme.inline, theme.lightcontrast)
+		local slide = render.frame(mid, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(0, 0, 1, -2),
+			BackgroundColor3 = theme.accent,
 		})
-		do
-			local a = theme.accent
-			render.shade(fill, a, Color3.new(a.R * 0.6, a.G * 0.6, a.B * 0.6))
-		end
-
-		local valueLabel = render.label(track, {
+		theme:Track(slide, "BackgroundColor3", "accent")
+		local valueLabel = render.label(fill, {
 			Size = UDim2.new(1, 0, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
-			Text = "0",
+		})
+		local hit = render.button(section.frame, {
+			Position = UDim2.new(0, 4, 0, axis + 15),
+			Size = UDim2.new(1, -8, 0, 12),
+			BackgroundTransparency = 1,
+			Text = "",
 		})
 
 		local function alpha()
@@ -58,7 +53,7 @@ return function(ctx)
 		end
 
 		local function refresh()
-			fill.Size = UDim2.new(alpha(), 0, 1, -2)
+			slide.Size = UDim2.new(alpha(), 0, 1, -2)
 			valueLabel.Text = display()
 		end
 
@@ -77,24 +72,20 @@ return function(ctx)
 			return value
 		end
 		function api:Destroy()
-			row:Destroy()
+			title:Destroy()
+			outer:Destroy()
+			hit:Destroy()
 		end
 
 		local function fromInput(input)
-			local rel = (input.Position.X - track.AbsolutePosition.X) / math.max(track.AbsoluteSize.X, 1)
+			local rel = (input.Position.X - outer.AbsolutePosition.X) / math.max(outer.AbsoluteSize.X, 1)
 			api:Set(min + (max - min) * math.clamp(rel, 0, 1))
 		end
 
 		local dragging = false
-		local hit = render.button(row, {
-			Position = UDim2.new(0, 0, 0, 15),
-			Size = UDim2.new(1, 0, 0, 12),
-			BackgroundTransparency = 1,
-			Text = "",
-		})
 		ctx.util.signal.connect(hit.InputBegan, function(input)
 			if
-				row.Parent
+				outer.Parent
 				and (
 					input.UserInputType == Enum.UserInputType.MouseButton1
 					or input.UserInputType == Enum.UserInputType.Touch
@@ -105,7 +96,7 @@ return function(ctx)
 			end
 		end)
 		ctx.util.signal.connect(UIS.InputChanged, function(input)
-			if not row.Parent then
+			if not outer.Parent then
 				dragging = false
 				return
 			end
@@ -129,6 +120,7 @@ return function(ctx)
 		end)
 
 		refresh()
+		base.advance(section, 27)
 		return base.register(api, base.autoFlag(info))
 	end
 

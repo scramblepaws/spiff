@@ -1,37 +1,33 @@
--- elements/base.luau | Octernal row scaffolding
+-- elements/base.luau | Octernal scaffolding: triple-nested 1px stacks + axis layout
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
 	local base = {}
 
-	function base.order(section)
-		return #section.content:GetChildren() + 1
+	-- outer -> mid -> fill, each inset 1px (the Octernal border signature)
+	function base.stack(parent, position, size, outer, mid, fill)
+		local outerFrame = render.frame(parent, {
+			Position = position,
+			Size = size,
+			BackgroundColor3 = outer or theme.outline,
+		})
+		local midFrame = render.frame(outerFrame, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = mid or theme.inline,
+		})
+		local fillFrame = render.frame(midFrame, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = fill or theme.darkcontrast,
+		})
+		return outerFrame, midFrame, fillFrame
 	end
 
-	-- borderless row (labels, toggles, sliders): section background shows through
-	function base.plain(section, height)
-		return render.frame(section.content, {
-			Size = UDim2.new(1, 0, 0, height),
-			BackgroundTransparency = 1,
-			LayoutOrder = base.order(section),
-		})
-	end
-
-	-- full-width bordered control with a vertical gradient; returns (row, gradient)
-	function base.control(section, height, fill)
-		local row = render.frame(section.content, {
-			Size = UDim2.new(1, 0, 0, height),
-			LayoutOrder = base.order(section),
-		})
-		local top, bottom
-		if fill == theme.lightcontrast then
-			top, bottom = Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29)
-		else
-			top, bottom = Color3.fromRGB(26, 26, 26), Color3.fromRGB(17, 17, 17)
-		end
-		local grad = render.shade(row, top, bottom)
-		render.borders(row, theme.outline)
-		return row, grad
+	-- advance the section's y-axis past a row (height + 4px gap) and refit
+	function base.advance(section, height)
+		section.axis = section.axis + height + 4
+		section:Update()
 	end
 
 	function base.register(api, flag)

@@ -1,4 +1,5 @@
--- core/window.luau | top-level menu. Octernal-style layered, gradient, shadowed.
+-- core/window.luau | Octernal window: outline -> accent -> lightcontrast shell,
+-- then inline -> outline -> darkcontrast back with a tab row and bordered content well.
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -29,7 +30,7 @@ return function(ctx)
 		self.visible = true
 		self.destroyed = false
 		self.toggleKey = info.toggleKey or info.Key or Enum.KeyCode.RightShift
-		local size = info.size or Vector2.new(512, 600)
+		local size = info.size or Vector2.new(504, 604)
 
 		local root = info.parent or resolveRoot()
 		local gui = render.create("ScreenGui", {
@@ -47,7 +48,7 @@ return function(ctx)
 		end
 		self.gui = gui
 
-		-- holder moves/scales; shadow sits behind the dark frame
+		-- holder moves/scales
 		local holder = render.frame(gui, {
 			Name = "Root",
 			Size = UDim2.fromOffset(size.X, size.Y),
@@ -56,15 +57,6 @@ return function(ctx)
 			BackgroundTransparency = 1,
 		})
 		self.root = holder
-
-		local shadow = render.frame(holder, {
-			Size = UDim2.new(1, 0, 1, 0),
-			Position = UDim2.new(0, 5, 0, 5),
-			BackgroundColor3 = Color3.new(0, 0, 0),
-			BackgroundTransparency = 0.35,
-			ZIndex = 0,
-		})
-		render.shade(shadow, Color3.new(0, 0, 0), Color3.new(0, 0, 0))
 
 		local scale = render.create("UIScale", { Scale = 1 }, holder)
 		local workspaceSvc = game:GetService("Workspace")
@@ -85,13 +77,12 @@ return function(ctx)
 			fit()
 		end)
 
-		-- dark frame + 1px accent ring + gradient body
+		-- layered shell: outline -> accent -> lightcontrast body
 		local main = render.frame(holder, {
 			Name = "Main",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundColor3 = theme.outline,
 			Active = true,
-			ZIndex = 1,
 		})
 		self.main = main
 
@@ -99,88 +90,67 @@ return function(ctx)
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.accent,
-			ZIndex = 1,
 		})
 		theme:Track(accent, "BackgroundColor3", "accent")
 
 		local body = render.frame(accent, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
-			ZIndex = 1,
+			BackgroundColor3 = theme.lightcontrast,
 		})
-		render.shade(body, Color3.fromRGB(38, 38, 38), Color3.fromRGB(24, 24, 24))
 
-		local top = render.frame(body, {
-			Name = "Top",
-			Size = UDim2.new(1, 0, 0, 30),
-			BackgroundTransparency = 1,
-			Active = true,
-		})
-		self.top = top
-		-- accent underline beneath the title bar
-		local underline = render.frame(body, {
-			Position = UDim2.new(0, 0, 0, 29),
-			Size = UDim2.new(1, 0, 0, 1),
-			BackgroundColor3 = theme.accent,
-		})
-		theme:Track(underline, "BackgroundColor3", "accent")
-
-		local titleW = render.textSize(self.title).X
-		local title = render.label(top, {
+		local title = render.label(body, {
 			Text = self.title,
-			Position = UDim2.new(0, 8, 0, 0),
-			Size = UDim2.new(0, titleW + 8, 1, 0),
-			TextYAlignment = Enum.TextYAlignment.Center,
+			Position = UDim2.new(0, 4, 0, 2),
+			Size = UDim2.new(0, render.textSize(self.title).X + 4, 0, 15),
 		})
-		theme:Track(title, "TextColor3", "text")
+		theme:Track(title, "TextColor3", "textcolor")
 		self.titleLabel = title
 
-		local close = render.button(top, {
-			Text = "x",
-			Size = UDim2.new(0, 22, 0, 18),
-			Position = UDim2.new(1, -7, 0.5, 0),
-			AnchorPoint = Vector2.new(1, 0.5),
-			TextSize = 14,
-			TextColor3 = theme.text,
-			BackgroundColor3 = Color3.new(1, 1, 1),
+		-- content stack: inline -> outline -> darkcontrast back
+		local contentInline = render.frame(body, {
+			Position = UDim2.new(0, 4, 0, 18),
+			Size = UDim2.new(1, -8, 1, -22),
+			BackgroundColor3 = theme.inline,
 		})
-		local closeGrad = render.shade(close, Color3.fromRGB(52, 52, 52), Color3.fromRGB(36, 36, 36))
-		render.borders(close, theme.outline)
-		ctx.util.signal.connect(close.MouseEnter, function()
-			render.setShade(closeGrad, Color3.fromRGB(120, 55, 55), Color3.fromRGB(80, 35, 35))
-		end)
-		ctx.util.signal.connect(close.MouseLeave, function()
-			render.setShade(closeGrad, Color3.fromRGB(52, 52, 52), Color3.fromRGB(36, 36, 36))
-		end)
-		ctx.util.signal.connect(close.MouseButton1Click, function()
-			self:Hide()
-		end)
-
-		-- content well
-		local well = render.frame(body, {
-			Position = UDim2.new(0, 6, 0, 36),
-			Size = UDim2.new(1, -12, 1, -42),
-			ZIndex = 1,
+		local contentOutline = render.frame(contentInline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.outline,
 		})
-		render.shade(well, Color3.fromRGB(26, 26, 26), Color3.fromRGB(17, 17, 17))
-		render.borders(well, theme.inline)
+		local back = render.frame(contentOutline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.darkcontrast,
+		})
 
-		local strip = render.frame(well, {
+		-- tab strip (page buttons live here)
+		local strip = render.frame(back, {
 			Name = "Tabs",
 			Position = UDim2.new(0, 4, 0, 4),
-			Size = UDim2.new(1, -8, 0, 22),
+			Size = UDim2.new(1, -8, 0, 21),
 			BackgroundTransparency = 1,
 		})
-		render.list(strip, { horizontal = true, padding = 3, vAlign = Enum.VerticalAlignment.Center })
+		render.list(strip, { horizontal = true, padding = 2, vAlign = Enum.VerticalAlignment.Center })
 		self.tabStrip = strip
 
-		local content = render.frame(well, {
-			Name = "Content",
-			Position = UDim2.new(0, 0, 0, 30),
-			Size = UDim2.new(1, 0, 1, -34),
-			BackgroundTransparency = 1,
+		-- content well: outline -> inline -> lightcontrast (sections go here)
+		local tabInline = render.frame(back, {
+			Position = UDim2.new(0, 4, 0, 24),
+			Size = UDim2.new(1, -8, 1, -28),
+			BackgroundColor3 = theme.outline,
 		})
-		self.body = content
+		local tabMid = render.frame(tabInline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.inline,
+		})
+		local tabBody = render.frame(tabMid, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.lightcontrast,
+		})
+		self.body = tabBody
 
 		-- toggle key
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)
@@ -193,6 +163,12 @@ return function(ctx)
 		end)
 
 		-- drag on the title bar
+		local top = render.frame(body, {
+			Name = "Top",
+			Size = UDim2.new(1, 0, 0, 17),
+			BackgroundTransparency = 1,
+			Active = true,
+		})
 		local dragging, dragStart, startPos = false, nil, nil
 		ctx.util.signal.connect(top.InputBegan, function(input)
 			if

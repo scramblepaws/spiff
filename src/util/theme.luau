@@ -1,4 +1,4 @@
--- util/theme.luau | Octernal Lib palette + live recolor registry
+-- util/theme.luau | Octernal Lib palette, verbatim + live recolor registry
 return function(ctx)
 	local theme = {
 		accent = Color3.fromRGB(55, 175, 225),
@@ -6,16 +6,17 @@ return function(ctx)
 		darkcontrast = Color3.fromRGB(25, 25, 25),
 		outline = Color3.fromRGB(0, 0, 0),
 		inline = Color3.fromRGB(50, 50, 50),
+		textcolor = Color3.fromRGB(255, 255, 255),
 		textborder = Color3.fromRGB(0, 0, 0),
-		text = Color3.fromRGB(235, 235, 235),
 		-- aliases used across modules
+		text = Color3.fromRGB(255, 255, 255),
 		background = Color3.fromRGB(25, 25, 25),
 		surface = Color3.fromRGB(30, 30, 30),
 		section = Color3.fromRGB(25, 25, 25),
 		row = Color3.fromRGB(25, 25, 25),
-		dim = Color3.fromRGB(150, 150, 150),
+		dim = Color3.fromRGB(140, 140, 140),
 		font = Enum.Font.Gotham,
-		textsize = 14,
+		textsize = 13,
 	}
 
 	function theme:Track(inst, prop, key)

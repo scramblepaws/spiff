@@ -1,4 +1,4 @@
--- elements/keybind.luau | Octernal: full-width control, name left, key right
+-- elements/keybind.luau | full-width control, name left, key right; click to rebind
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -11,23 +11,28 @@ return function(ctx)
 		local api = {}
 		local value = info.value or info.Value or Enum.KeyCode.Unknown
 		local listening = false
+		local axis = section.axis
 
-		local row = base.control(section, 20, theme.darkcontrast)
-		render.label(row, {
+		local outer, _, fill = base.stack(section.frame, UDim2.new(0, 4, 0, axis), UDim2.new(1, -8, 0, 20), theme.outline, theme.inline, theme.darkcontrast)
+		render.label(fill, {
 			Text = info.name or "Keybind",
 			Position = UDim2.new(0, 6, 0, 0),
 			Size = UDim2.new(1, -110, 1, 0),
 			TextYAlignment = Enum.TextYAlignment.Center,
 		})
-		local keyLabel = render.label(row, {
+		local keyLabel = render.label(fill, {
 			Text = value.Name,
 			Position = UDim2.new(1, -8, 0, 0),
 			Size = UDim2.new(0, 100, 1, 0),
 			TextXAlignment = Enum.TextXAlignment.Right,
 			TextYAlignment = Enum.TextYAlignment.Center,
 		})
-
-		local btn = render.button(row, { Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "" })
+		local btn = render.button(section.frame, {
+			Position = UDim2.new(0, 4, 0, axis),
+			Size = UDim2.new(1, -8, 0, 20),
+			BackgroundTransparency = 1,
+			Text = "",
+		})
 
 		function api:Set(key)
 			value = key or Enum.KeyCode.Unknown
@@ -46,7 +51,8 @@ return function(ctx)
 					break
 				end
 			end
-			row:Destroy()
+			outer:Destroy()
+			btn:Destroy()
 		end
 
 		ctx.state.keybinds[#ctx.state.keybinds + 1] = { name = info.name or "Keybind", get = api.Get }
@@ -57,7 +63,7 @@ return function(ctx)
 		end)
 
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)
-			if gpe or not row.Parent then
+			if gpe or not outer.Parent then
 				return
 			end
 			if listening then
@@ -71,13 +77,14 @@ return function(ctx)
 		end)
 
 		ctx.util.signal.connect(UIS.InputEnded, function(input)
-			if row.Parent and value ~= Enum.KeyCode.Unknown and input.KeyCode == value then
+			if outer.Parent and value ~= Enum.KeyCode.Unknown and input.KeyCode == value then
 				if info.onrelease then
 					info.onrelease(false)
 				end
 			end
 		end)
 
+		base.advance(section, 20)
 		return base.register(api, base.autoFlag(info))
 	end
 

@@ -7,9 +7,9 @@ One phase per commit + push. Each line is "done" when it is committed and the
       CHANGELOG, LICENSE, `.gitignore`; `git init` + new GitHub repo.
 - [x] **Phase 1 — Scaffold.** `state`, `util/*`, `render/*`, `manifest`, `loader`,
       `init` returning an empty `Library`; demo proves it loads.
-- [ ] **Phase 2 — Window shell.** draggable window, title bar, tab strip, toggle
+- [x] **Phase 2 — Window shell.** draggable window, title bar, tab strip, toggle
       key, close button, unload.
-- [ ] **Phase 3 — Page & Section.** pages as tabs, left/right sections, scroll.
+- [x] **Phase 3 — Page & Section.** pages as tabs, left/right sections, scroll.
 - [ ] **Phase 4 — Core elements.** label, button, toggle, slider.
 - [ ] **Phase 5 — Input elements.** textbox, dropdown, multibox, keybind.
 - [ ] **Phase 6 — Advanced elements.** colorpicker, listbox, configbox,

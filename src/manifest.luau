@@ -7,5 +7,8 @@ return {
 	"util.filesystem",
 	"util.index",
 	"render.index",
+	"core.window",
+	"core.page",
+	"core.section",
 	"init",
 }

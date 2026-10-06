@@ -20,7 +20,6 @@ return function(ctx)
 			TextColor3 = theme.background,
 			TextSize = 12,
 		})
-		render.corner(btn, 3)
 		theme:Track(btn, "BackgroundColor3", "accent")
 		theme:Track(btn, "TextColor3", "background")
 

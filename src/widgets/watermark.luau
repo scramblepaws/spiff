@@ -19,14 +19,12 @@ return function(ctx)
 			BackgroundColor3 = theme.background,
 			ZIndex = 1000,
 		})
-		render.corner(frame, 4)
 		render.stroke(frame, theme.outline, 1)
 		local accent = render.frame(frame, {
 			Size = UDim2.new(0, 3, 1, 0),
 			BackgroundColor3 = theme.accent,
 			ZIndex = 1001,
 		})
-		render.corner(accent, 4)
 		local label = render.label(frame, {
 			Position = UDim2.new(0, 10, 0, 0),
 			Size = UDim2.new(1, -16, 1, 0),

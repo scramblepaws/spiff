@@ -22,7 +22,6 @@ return function(ctx)
 			BackgroundTransparency = 0,
 			LayoutOrder = #window.pages,
 		})
-		render.corner(button, 3)
 		render.borders(button, theme.outline, theme.inline)
 		self.button = button
 

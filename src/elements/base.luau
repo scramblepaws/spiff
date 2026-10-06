@@ -12,7 +12,6 @@ return function(ctx)
 			LayoutOrder = info.order or (#section.content:GetChildren() + 1),
 		})
 		render.borders(row, theme.outline, theme.inline)
-		render.corner(row, 3)
 		local label = render.label(row, {
 			Text = info.name or "",
 			Position = UDim2.new(0, 8, 0, 0),

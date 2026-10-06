@@ -37,7 +37,6 @@ return function(ctx)
 			BackgroundColor3 = theme.darkcontrast,
 		})
 		render.borders(frame, theme.inline, theme.outline)
-		render.corner(frame, 3)
 		render.padding(frame, 6, 6)
 		self.frame = frame
 

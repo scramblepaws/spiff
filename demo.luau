@@ -19,7 +19,7 @@ local S = getgenv().SpiffDemo or {
 	jump = 50,
 	infiniteJump = false,
 	esp = false,
-	accent = Color3.fromRGB(178, 156, 255),
+	accent = Color3.fromRGB(55, 175, 225),
 }
 getgenv().SpiffDemo = S
 

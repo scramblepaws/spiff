@@ -112,10 +112,6 @@ return function(ctx)
 		return parent
 	end
 
-	function render.corner(parent, radius)
-		return create("UICorner", { CornerRadius = UDim.new(0, radius or 4) }, parent)
-	end
-
 	function render.padding(parent, x, y)
 		return create("UIPadding", {
 			PaddingLeft = UDim.new(0, x),

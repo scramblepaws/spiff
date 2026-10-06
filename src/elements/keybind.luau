@@ -23,7 +23,6 @@ return function(ctx)
 			TextColor3 = theme.text,
 			TextSize = 12,
 		})
-		render.corner(btn, 3)
 		render.stroke(btn, theme.outline, 1)
 
 		function api:Set(key)

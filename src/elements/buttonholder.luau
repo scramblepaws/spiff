@@ -28,7 +28,6 @@ return function(ctx)
 				TextColor3 = theme.background,
 				TextSize = 12,
 			})
-			render.corner(btn, 3)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				if callback then
 					callback()

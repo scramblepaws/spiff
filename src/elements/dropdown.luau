@@ -39,7 +39,6 @@ return function(ctx)
 			BackgroundColor3 = theme.background,
 			Visible = false,
 		})
-		render.corner(holder, 4)
 		render.list(holder, { padding = 2 })
 		render.padding(holder, 4, 2)
 
@@ -53,7 +52,6 @@ return function(ctx)
 				BackgroundColor3 = theme.row,
 				BackgroundTransparency = 0,
 			})
-			render.corner(option, 3)
 			ctx.util.signal.connect(option.MouseButton1Click, function()
 				api:Set(opt)
 				api:Toggle(false)

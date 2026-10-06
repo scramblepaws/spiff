@@ -8,6 +8,8 @@ All notable changes to spiff are documented here. Format follows
 
 ### Changed
 
+- Removed all edge rounding (`render.corner` / `UICorner` deleted) to match
+  Octernal's square panels.
 - Restyled to Octernal Lib's design plan: layered borders
   (outline -> accent -> lightcontrast body; inline -> outline -> darkcontrast
   content), accent top strip on sections, black-outlined text, and the Octernal

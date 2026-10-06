@@ -33,12 +33,10 @@ return function(ctx)
 			BackgroundColor3 = theme.inline,
 			AnchorPoint = Vector2.new(0, 0),
 		})
-		render.corner(track, 3)
 		local fill = render.frame(track, {
 			Size = UDim2.new(0, 0, 1, 0),
 			BackgroundColor3 = theme.accent,
 		})
-		render.corner(fill, 3)
 		theme:Track(fill, "BackgroundColor3", "accent")
 
 		local grip = render.button(row, {

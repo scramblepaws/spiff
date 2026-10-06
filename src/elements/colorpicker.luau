@@ -23,7 +23,6 @@ return function(ctx)
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = value,
 		})
-		render.corner(swatch, 3)
 		render.stroke(swatch, theme.outline, 1)
 
 		local header = render.button(row, { Size = UDim2.new(1, 0, 0, 24), Text = "" })
@@ -34,7 +33,6 @@ return function(ctx)
 			BackgroundColor3 = theme.background,
 			Visible = false,
 		})
-		render.corner(holder, 4)
 		render.list(holder, { padding = 2 })
 		render.padding(holder, 4, 4)
 
@@ -42,7 +40,6 @@ return function(ctx)
 			Size = UDim2.new(1, 0, 0, 16),
 			BackgroundColor3 = value,
 		})
-		render.corner(preview, 3)
 		render.stroke(preview, theme.outline, 1)
 
 		local h, s, v = value:ToHSV()

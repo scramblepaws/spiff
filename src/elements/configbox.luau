@@ -21,7 +21,6 @@ return function(ctx)
 			PlaceholderText = "config name",
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
-		render.corner(field, 3)
 		render.stroke(field, theme.outline, 1)
 		render.padding(field, 4, 0)
 
@@ -63,7 +62,6 @@ return function(ctx)
 				TextColor3 = theme.text,
 				TextSize = 12,
 			})
-			render.corner(btn, 3)
 			render.stroke(btn, theme.outline, 1)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				run(action.kind, info[action.kind])

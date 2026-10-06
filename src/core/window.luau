@@ -56,7 +56,6 @@ return function(ctx)
 			BackgroundColor3 = theme.outline,
 			Active = true,
 		})
-		render.corner(main, 5)
 		self.main = main
 
 		local accent = render.frame(main, {
@@ -64,7 +63,6 @@ return function(ctx)
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.accent,
 		})
-		render.corner(accent, 4)
 		theme:Track(accent, "BackgroundColor3", "accent")
 
 		local body = render.frame(accent, {
@@ -72,7 +70,6 @@ return function(ctx)
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.lightcontrast,
 		})
-		render.corner(body, 4)
 
 		local top = render.frame(body, {
 			Name = "Top",
@@ -102,7 +99,6 @@ return function(ctx)
 			BackgroundColor3 = theme.inline,
 			BackgroundTransparency = 0,
 		})
-		render.corner(close, 3)
 		render.borders(close, theme.outline, theme.inline)
 		ctx.util.signal.connect(close.MouseButton1Click, function()
 			self:Hide()
@@ -114,19 +110,16 @@ return function(ctx)
 			Size = UDim2.new(1, -8, 1, -22),
 			BackgroundColor3 = theme.inline,
 		})
-		render.corner(contentInline, 4)
 		local contentOutline = render.frame(contentInline, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.outline,
 		})
-		render.corner(contentOutline, 3)
 		local back = render.frame(contentOutline, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.darkcontrast,
 		})
-		render.corner(back, 3)
 
 		local strip = render.frame(back, {
 			Name = "Tabs",
@@ -143,19 +136,16 @@ return function(ctx)
 			Size = UDim2.new(1, -8, 1, -30),
 			BackgroundColor3 = theme.outline,
 		})
-		render.corner(tabOutline, 4)
 		local tabInline = render.frame(tabOutline, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.inline,
 		})
-		render.corner(tabInline, 3)
 		local content = render.frame(tabInline, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.lightcontrast,
 		})
-		render.corner(content, 3)
 		self.body = content
 
 		-- toggle key

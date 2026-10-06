@@ -19,7 +19,6 @@ return function(ctx)
 			PlaceholderText = info.placeholder or "type...",
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
-		render.corner(box, 3)
 		render.borders(box, theme.outline, theme.inline)
 		render.padding(box, 4, 0)
 		theme:Track(box, "TextColor3", "text")

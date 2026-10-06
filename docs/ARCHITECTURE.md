@@ -52,8 +52,8 @@ whole tree.
 ## Backend
 
 `src/render/index.luau` is the only place that knows about instances. It exposes
-primitives (`frame`, `label`, `button`, `stroke`, `gradient`, `scroll`, `list`,
-`corner`, `padding`). Swapping in a `Drawing` backend means writing a second
+primitives (`frame`, `label`, `button`, `stroke`, `borders`, `textbox`,
+`scroll`, `list`, `padding`). Swapping in a `Drawing` backend means writing a second
 file with the same primitives; core/elements/widgets are untouched.
 
 ## Layout

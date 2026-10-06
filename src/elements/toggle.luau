@@ -17,7 +17,6 @@ return function(ctx)
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = value and theme.accent or theme.inline,
 		})
-		render.corner(box, 3)
 		render.stroke(box, theme.outline, 1)
 
 		local click = render.button(row, {

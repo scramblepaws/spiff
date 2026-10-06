@@ -15,7 +15,7 @@ return function(ctx)
 			Size = UDim2.new(0, 18, 0, 18),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
-			BackgroundColor3 = value and theme.accent or theme.row,
+			BackgroundColor3 = value and theme.accent or theme.inline,
 		})
 		render.corner(box, 3)
 		render.stroke(box, theme.outline, 1)
@@ -28,7 +28,7 @@ return function(ctx)
 
 		function api:Set(v)
 			value = v == true
-			box.BackgroundColor3 = value and theme.accent or theme.row
+			box.BackgroundColor3 = value and theme.accent or theme.inline
 			if info.callback then
 				info.callback(value)
 			end

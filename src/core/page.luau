@@ -15,12 +15,15 @@ return function(ctx)
 
 		local button = render.button(window.tabStrip, {
 			Text = self.name,
-			Size = UDim2.new(0, render.textSize(self.name).X + 20, 1, -6),
-			TextColor3 = theme.dim,
+			Size = UDim2.new(0, render.textSize(self.name).X + 20, 1, 0),
+			TextColor3 = theme.text,
 			TextSize = theme.textsize,
+			BackgroundColor3 = theme.darkcontrast,
+			BackgroundTransparency = 0,
 			LayoutOrder = #window.pages,
 		})
-		render.corner(button, 4)
+		render.corner(button, 3)
+		render.borders(button, theme.outline, theme.inline)
 		self.button = button
 
 		local content = render.frame(window.body, {
@@ -49,7 +52,7 @@ return function(ctx)
 	end
 
 	function Page:SetActive(on)
-		self.button.TextColor3 = on and theme.accent or theme.dim
+		self.button.BackgroundColor3 = on and theme.lightcontrast or theme.darkcontrast
 	end
 
 	function Page:Show()

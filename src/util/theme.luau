@@ -1,20 +1,23 @@
--- util/theme.luau | palette + live recolor registry
+-- util/theme.luau | Octernal Lib palette + live recolor registry
 return function(ctx)
 	local theme = {
-		accent = Color3.fromRGB(178, 156, 255), -- Akiri purple
-		background = Color3.fromRGB(20, 16, 36),
-		surface = Color3.fromRGB(25, 20, 45),
-		section = Color3.fromRGB(40, 34, 64),
-		row = Color3.fromRGB(46, 42, 76),
-		inline = Color3.fromRGB(60, 54, 92),
-		outline = Color3.new(0, 0, 0),
-		text = Color3.fromRGB(200, 190, 255),
-		dim = Color3.fromRGB(140, 135, 180),
+		accent = Color3.fromRGB(55, 175, 225),
+		lightcontrast = Color3.fromRGB(30, 30, 30),
+		darkcontrast = Color3.fromRGB(25, 25, 25),
+		outline = Color3.fromRGB(0, 0, 0),
+		inline = Color3.fromRGB(50, 50, 50),
+		textborder = Color3.fromRGB(0, 0, 0),
+		text = Color3.fromRGB(255, 255, 255),
+		-- aliases used across modules
+		background = Color3.fromRGB(25, 25, 25),
+		surface = Color3.fromRGB(30, 30, 30),
+		section = Color3.fromRGB(25, 25, 25),
+		row = Color3.fromRGB(25, 25, 25),
+		dim = Color3.fromRGB(150, 150, 150),
 		font = Enum.Font.Code,
 		textsize = 13,
 	}
 
-	-- register an instance property against a theme key, then apply it
 	function theme:Track(inst, prop, key)
 		local reg = ctx.state.colors
 		reg[inst] = reg[inst] or {}
@@ -23,7 +26,6 @@ return function(ctx)
 		return inst
 	end
 
-	-- recolor every tracked instance using the given theme key
 	function theme:UpdateColor(key, color)
 		theme[key] = color
 		for inst, props in pairs(ctx.state.colors) do

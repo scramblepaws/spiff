@@ -1,4 +1,5 @@
--- core/section.luau | bordered panel holding elements, on the left or right column
+-- core/section.luau | Octernal-style panel: dark fill, inline+outline border,
+-- accent top strip, holding elements on the left or right column.
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -33,23 +34,31 @@ return function(ctx)
 		local frame = render.frame(parent, {
 			Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
-			BackgroundColor3 = theme.section,
+			BackgroundColor3 = theme.darkcontrast,
 		})
-		render.stroke(frame, theme.outline, 1)
-		render.corner(frame, 4)
+		render.borders(frame, theme.inline, theme.outline)
+		render.corner(frame, 3)
 		render.padding(frame, 6, 6)
 		self.frame = frame
 
+		local accent = render.frame(frame, {
+			Size = UDim2.new(1, 0, 0, 1),
+			Position = UDim2.new(0, 0, 0, 0),
+			BackgroundColor3 = theme.accent,
+		})
+		theme:Track(accent, "BackgroundColor3", "accent")
+
 		local title = render.label(frame, {
 			Text = self.name,
-			Size = UDim2.new(1, 0, 0, 16),
+			Position = UDim2.new(0, 0, 0, 4),
+			Size = UDim2.new(1, 0, 0, 15),
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
 		theme:Track(title, "TextColor3", "text")
 		self.title = title
 
 		local content = render.frame(frame, {
-			Position = UDim2.new(0, 0, 0, 18),
+			Position = UDim2.new(0, 0, 0, 22),
 			Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1,
@@ -71,6 +80,8 @@ return function(ctx)
 			return self:Add(k, info)
 		end
 	end
+	-- accept both capitalisations
+	Section.AddButtonholder = Section.AddButtonHolder
 
 	function Section:Destroy()
 		if self.frame then

@@ -1,4 +1,5 @@
--- core/window.luau | top-level menu: ScreenGui, title bar, tab strip, body, drag, toggle key
+-- core/window.luau | top-level menu. Octernal-style layered frame stack:
+--   outline -> accent -> lightcontrast body, then inline -> outline -> dark content.
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -29,7 +30,7 @@ return function(ctx)
 		self.visible = true
 		self.destroyed = false
 		self.toggleKey = info.toggleKey or info.Key or Enum.KeyCode.RightShift
-		local size = info.size or Vector2.new(520, 380)
+		local size = info.size or Vector2.new(504, 604)
 
 		local root = info.parent or resolveRoot()
 		local gui = render.create("ScreenGui", {
@@ -43,38 +44,49 @@ return function(ctx)
 			gui.Parent = root
 		end)
 		if not parented or not gui.Parent then
-			root = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-			gui.Parent = root
+			gui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 		end
 		self.gui = gui
 
+		-- layered stack: outline -> accent -> lightcontrast body
 		local main = render.frame(gui, {
 			Name = "Main",
 			Size = UDim2.fromOffset(size.X, size.Y),
 			Position = UDim2.new(0.5, -size.X / 2, 0.5, -size.Y / 2),
-			BackgroundColor3 = theme.surface,
+			BackgroundColor3 = theme.outline,
 			Active = true,
 		})
-		render.stroke(main, theme.outline, 2)
-		local accent = render.stroke(main, theme.accent, 1)
-		theme:Track(accent, "Color", "accent")
-		render.corner(main, 6)
+		render.corner(main, 5)
 		self.main = main
 
-		local top = render.frame(main, {
+		local accent = render.frame(main, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.accent,
+		})
+		render.corner(accent, 4)
+		theme:Track(accent, "BackgroundColor3", "accent")
+
+		local body = render.frame(accent, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.lightcontrast,
+		})
+		render.corner(body, 4)
+
+		local top = render.frame(body, {
 			Name = "Top",
 			Size = UDim2.new(1, 0, 0, 30),
-			BackgroundColor3 = theme.background,
+			BackgroundTransparency = 1,
 			Active = true,
 		})
-		render.corner(top, 6)
 		self.top = top
 
 		local titleW = render.textSize(self.title).X
 		local title = render.label(top, {
 			Text = self.title,
-			Position = UDim2.new(0, 10, 0, 0),
-			Size = UDim2.new(0, titleW + 4, 1, 0),
+			Position = UDim2.new(0, 6, 0, 0),
+			Size = UDim2.new(0, titleW + 6, 1, 0),
 			TextYAlignment = Enum.TextYAlignment.Center,
 		})
 		theme:Track(title, "TextColor3", "text")
@@ -82,31 +94,69 @@ return function(ctx)
 
 		local close = render.button(top, {
 			Text = "x",
-			Size = UDim2.new(0, 28, 1, 0),
-			Position = UDim2.new(1, -28, 0, 0),
-			TextSize = 16,
-			TextColor3 = theme.dim,
+			Size = UDim2.new(0, 22, 0, 18),
+			Position = UDim2.new(1, -6, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			TextSize = 14,
+			TextColor3 = theme.text,
+			BackgroundColor3 = theme.inline,
+			BackgroundTransparency = 0,
 		})
+		render.corner(close, 3)
+		render.borders(close, theme.outline, theme.inline)
 		ctx.util.signal.connect(close.MouseButton1Click, function()
 			self:Hide()
 		end)
 
-		local strip = render.frame(top, {
+		-- content stack: inline -> outline -> darkcontrast (back)
+		local contentInline = render.frame(body, {
+			Position = UDim2.new(0, 4, 0, 18),
+			Size = UDim2.new(1, -8, 1, -22),
+			BackgroundColor3 = theme.inline,
+		})
+		render.corner(contentInline, 4)
+		local contentOutline = render.frame(contentInline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.outline,
+		})
+		render.corner(contentOutline, 3)
+		local back = render.frame(contentOutline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.darkcontrast,
+		})
+		render.corner(back, 3)
+
+		local strip = render.frame(back, {
 			Name = "Tabs",
-			Position = UDim2.new(0, 10 + titleW + 12, 0, 0),
-			Size = UDim2.new(1, -(10 + titleW + 12 + 36), 1, 0),
+			Position = UDim2.new(0, 4, 0, 4),
+			Size = UDim2.new(1, -8, 0, 20),
 			BackgroundTransparency = 1,
 		})
 		render.list(strip, { horizontal = true, padding = 4, vAlign = Enum.VerticalAlignment.Center })
 		self.tabStrip = strip
 
-		local body = render.frame(main, {
-			Name = "Body",
-			Position = UDim2.new(0, 1, 0, 31),
-			Size = UDim2.new(1, -2, 1, -32),
-			BackgroundTransparency = 1,
+		-- content container: outline -> inline -> lightcontrast
+		local tabOutline = render.frame(back, {
+			Position = UDim2.new(0, 4, 0, 26),
+			Size = UDim2.new(1, -8, 1, -30),
+			BackgroundColor3 = theme.outline,
 		})
-		self.body = body
+		render.corner(tabOutline, 4)
+		local tabInline = render.frame(tabOutline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.inline,
+		})
+		render.corner(tabInline, 3)
+		local content = render.frame(tabInline, {
+			Position = UDim2.new(0, 1, 0, 1),
+			Size = UDim2.new(1, -2, 1, -2),
+			BackgroundColor3 = theme.lightcontrast,
+		})
+		render.corner(content, 3)
+		self.body = content
 
 		-- toggle key
 		ctx.util.signal.connect(UIS.InputBegan, function(input, gpe)

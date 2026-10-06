@@ -6,10 +6,20 @@ All notable changes to spiff are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+
+- Restyled to Octernal Lib's design plan: layered borders
+  (outline -> accent -> lightcontrast body; inline -> outline -> darkcontrast
+  content), accent top strip on sections, black-outlined text, and the Octernal
+  palette (`accent` 55/175/225, `lightcontrast` 30/30/30, `darkcontrast`
+  25/25/25, `inline` 50/50/50). Default window size 504x604.
+
 ### Fixed
 
 - `Library.Window` was never wired in `init.luau`, so `Menu.Window` was nil and
   the demo failed with `attempt to call a nil value`. Window is now exposed.
+- `Section:AddButtonholder` alias added (the dynamic surface only had
+  `AddButtonHolder`), fixing `attempt to call missing method`.
 
 - Loader fetched a bare relative path instead of a full URL, causing
   `invalid protocol`. Module and manifest fetches now prefix `Base`.

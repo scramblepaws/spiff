@@ -47,6 +47,13 @@ return function(ctx)
 		if props.TextXAlignment == nil then
 			props.TextXAlignment = Enum.TextXAlignment.Left
 		end
+		-- Octernal look: every label is outlined
+		if props.TextStrokeTransparency == nil then
+			props.TextStrokeTransparency = 0
+		end
+		if props.TextStrokeColor3 == nil then
+			props.TextStrokeColor3 = theme.outline
+		end
 		return create("TextLabel", props, parent)
 	end
 
@@ -96,6 +103,13 @@ return function(ctx)
 			Thickness = thickness or 1,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		}, parent)
+	end
+
+	-- Octernal layered border: a wider outer ring plus a 1px inner ring
+	function render.borders(parent, outerColor, innerColor)
+		render.stroke(parent, outerColor or theme.inline, 2)
+		render.stroke(parent, innerColor or theme.outline, 1)
+		return parent
 	end
 
 	function render.corner(parent, radius)

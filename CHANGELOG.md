@@ -8,6 +8,9 @@ All notable changes to spiff are documented here. Format follows
 
 ### Fixed
 
+- `Library.Window` was never wired in `init.luau`, so `Menu.Window` was nil and
+  the demo failed with `attempt to call a nil value`. Window is now exposed.
+
 - Loader fetched a bare relative path instead of a full URL, causing
   `invalid protocol`. Module and manifest fetches now prefix `Base`.
 - Loader no longer silently swallows failures: it logs each stage, surfaces the

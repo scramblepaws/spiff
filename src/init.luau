@@ -13,6 +13,11 @@ return function(ctx)
 		Theme = ctx.util.theme,
 	}
 
+	local Window = ctx.require("core.window")
+	function Library.Window(info)
+		return Window.new(info)
+	end
+
 	function Library:Unload()
 		ctx.util.signal.disconnectAll()
 		for _, win in ipairs(ctx.state.windows) do

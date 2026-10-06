@@ -5,7 +5,7 @@ One phase per commit + push. Each line is "done" when it is committed and the
 
 - [x] **Phase 0 — Docs & repo.** GOAL, ROADMAP, ARCHITECTURE, CONTEXT, README,
       CHANGELOG, LICENSE, `.gitignore`; `git init` + new GitHub repo.
-- [ ] **Phase 1 — Scaffold.** `state`, `util/*`, `render/*`, `manifest`, `loader`,
+- [x] **Phase 1 — Scaffold.** `state`, `util/*`, `render/*`, `manifest`, `loader`,
       `init` returning an empty `Library`; demo proves it loads.
 - [ ] **Phase 2 — Window shell.** draggable window, title bar, tab strip, toggle
       key, close button, unload.

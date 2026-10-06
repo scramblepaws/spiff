@@ -10,3 +10,6 @@ All notable changes to spiff are documented here. Format follows
 
 - Phase 0: project docs (`GOAL`, `ROADMAP`, `ARCHITECTURE`, `CONTEXT`), README,
   LICENSE, `.gitignore`.
+- Phase 1: `state`, `util/*` (math, signal, theme, filesystem, index),
+  `render/index` native-Instance backend, `manifest`, runtime `loader`, `init`
+  returning the `Library` table, smoke test.

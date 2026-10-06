@@ -1,0 +1,12 @@
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# luau tooling
+*.luac
+.sourcemap.json
+
+# local executor configs / scratch
+configs/

@@ -18,6 +18,10 @@ modules instead of one ~5,500-line script.
 -- one-liner loader
 loadstring(game:HttpGet("https://raw.githubusercontent.com/scramblepaws/spiff/main/loader.luau"))()
 
+-- fresh copy / pin a ref (raw caches `main`; a tag or commit SHA is always fresh)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/scramblepaws/spiff/v1.0.0/loader.luau"))()
+-- or: getgenv().SpiffConfig = { Ref = "v1.0.0" } before loading
+
 -- or, if the lib is already loaded:
 local Menu = getgenv().Spiff
 local win = Menu.Window({ name = "spiff" })

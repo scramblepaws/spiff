@@ -5,7 +5,10 @@ if type(config) ~= "table" then
 	config = {}
 	getgenv().SpiffConfig = config
 end
-local Base = config.Base or "https://raw.githubusercontent.com/scramblepaws/spiff/main"
+-- raw.githubusercontent caches by ref path and ignores query strings, so pin
+-- config.Ref to a tag or commit SHA for guaranteed-fresh code.
+local Ref = config.Ref or "main"
+local Base = config.Base or ("https://raw.githubusercontent.com/scramblepaws/spiff/" .. Ref)
 local CB = "?cb=" .. tostring(math.floor((os.clock and os.clock() or 0) * 1000))
 
 local function log(...)

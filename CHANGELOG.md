@@ -17,6 +17,8 @@ All notable changes to spiff are documented here. Format follows
   `http_request`, and `loadstring` / `load`.
 - Window parenting falls back to `PlayerGui` if `gethui()` cannot hold the
   ScreenGui.
+- Loader supports `SpiffConfig.Ref` (a tag or commit SHA) because
+  raw.githubusercontent caches `main` and ignores query-string cache busting.
 
 ### Changed
 

@@ -10,7 +10,7 @@ One phase per commit + push. Each line is "done" when it is committed and the
 - [x] **Phase 2 — Window shell.** draggable window, title bar, tab strip, toggle
       key, close button, unload.
 - [x] **Phase 3 — Page & Section.** pages as tabs, left/right sections, scroll.
-- [ ] **Phase 4 — Core elements.** label, button, toggle, slider.
+- [x] **Phase 4 — Core elements.** label, button, toggle, slider.
 - [ ] **Phase 5 — Input elements.** textbox, dropdown, multibox, keybind.
 - [ ] **Phase 6 — Advanced elements.** colorpicker, listbox, configbox,
       buttonholder.

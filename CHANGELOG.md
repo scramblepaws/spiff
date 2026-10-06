@@ -16,3 +16,9 @@ All notable changes to spiff are documented here. Format follows
 - Phase 2/3: `core/window` (ScreenGui, title bar, tab strip, drag, toggle key,
   destroy), `core/page` (tabs + two-column scroll body), `core/section`
   (bordered panel with a dynamic `AddX` surface).
+- Phase 4: `elements/base` (row + flag registry), `label`, `button`, `toggle`,
+  `slider`; `:Set`/`:Get`/`:Destroy` on each.
+
+### Verified
+
+- All 20 `.luau` files compile with `luau-compile` (Luau 0.741).

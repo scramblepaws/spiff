@@ -10,5 +10,10 @@ return {
 	"core.window",
 	"core.page",
 	"core.section",
+	"elements.base",
+	"elements.label",
+	"elements.button",
+	"elements.toggle",
+	"elements.slider",
 	"init",
 }

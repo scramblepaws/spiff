@@ -44,14 +44,14 @@ local compile = loadstring or load
 assert(typeof(compile) == "function", "[spiff] this executor has no loadstring/load")
 
 log("fetching manifest from", Base)
-local manifestChunk = compile(httpGet("src/manifest.luau" .. CB))
+local manifestChunk = compile(httpGet(Base .. "/src/manifest.luau" .. CB))
 assert(manifestChunk, "[spiff] manifest did not compile")
 local manifest = manifestChunk()
 assert(type(manifest) == "table", "[spiff] manifest is not a list")
 
 local mods = {}
 for _, key in ipairs(manifest) do
-	local chunk, err = compile(httpGet("src/" .. key:gsub("%.", "/") .. ".luau" .. CB))
+	local chunk, err = compile(httpGet(Base .. "/src/" .. key:gsub("%.", "/") .. ".luau" .. CB))
 	assert(chunk, "[spiff] compile " .. key .. ": " .. tostring(err))
 	local factory = chunk()
 	assert(typeof(factory) == "function", "[spiff] " .. key .. " must return function(ctx)")

@@ -8,6 +8,8 @@ All notable changes to spiff are documented here. Format follows
 
 ### Fixed
 
+- Loader fetched a bare relative path instead of a full URL, causing
+  `invalid protocol`. Module and manifest fetches now prefix `Base`.
 - Loader no longer silently swallows failures: it logs each stage, surfaces the
   demo traceback via `warn`, and falls back to an inline demo window so the GUI
   always appears.

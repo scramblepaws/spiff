@@ -8,7 +8,7 @@ return function(ctx)
 	function M.new(section, info)
 		info = info or {}
 		local api = {}
-		local row = base.control(section, 20, theme.lightcontrast)
+		local row, grad = base.control(section, 22, theme.lightcontrast)
 
 		local label = render.label(row, {
 			Text = info.text or info.name or "Button",
@@ -23,10 +23,10 @@ return function(ctx)
 			Text = "",
 		})
 		ctx.util.signal.connect(btn.MouseEnter, function()
-			row.BackgroundColor3 = theme.inline
+			render.setShade(grad, Color3.fromRGB(58, 58, 58), Color3.fromRGB(38, 38, 38))
 		end)
 		ctx.util.signal.connect(btn.MouseLeave, function()
-			row.BackgroundColor3 = theme.lightcontrast
+			render.setShade(grad, Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29))
 		end)
 		ctx.util.signal.connect(btn.MouseButton1Click, function()
 			if info.callback then

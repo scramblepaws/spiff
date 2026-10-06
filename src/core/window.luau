@@ -1,5 +1,4 @@
--- core/window.luau | top-level menu. Octernal-style layered frame stack:
---   outline -> accent -> lightcontrast body, then inline -> outline -> dark content.
+-- core/window.luau | top-level menu. Octernal-style layered, gradient, shadowed.
 return function(ctx)
 	local render = ctx.render
 	local theme = ctx.util.theme
@@ -30,7 +29,7 @@ return function(ctx)
 		self.visible = true
 		self.destroyed = false
 		self.toggleKey = info.toggleKey or info.Key or Enum.KeyCode.RightShift
-		local size = info.size or Vector2.new(504, 604)
+		local size = info.size or Vector2.new(512, 600)
 
 		local root = info.parent or resolveRoot()
 		local gui = render.create("ScreenGui", {
@@ -48,19 +47,26 @@ return function(ctx)
 		end
 		self.gui = gui
 
-		-- layered stack: outline -> accent -> lightcontrast body
-		local main = render.frame(gui, {
-			Name = "Main",
+		-- holder moves/scales; shadow sits behind the dark frame
+		local holder = render.frame(gui, {
+			Name = "Root",
 			Size = UDim2.fromOffset(size.X, size.Y),
 			Position = UDim2.new(0.5, 0, 0.5, 0),
 			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundColor3 = theme.outline,
-			Active = true,
+			BackgroundTransparency = 1,
 		})
-		self.main = main
+		self.root = holder
 
-		-- autoscale to the viewport height
-		local scale = render.create("UIScale", { Scale = 1 }, main)
+		local shadow = render.frame(holder, {
+			Size = UDim2.new(1, 0, 1, 0),
+			Position = UDim2.new(0, 5, 0, 5),
+			BackgroundColor3 = Color3.new(0, 0, 0),
+			BackgroundTransparency = 0.35,
+			ZIndex = 0,
+		})
+		render.shade(shadow, Color3.new(0, 0, 0), Color3.new(0, 0, 0))
+
+		local scale = render.create("UIScale", { Scale = 1 }, holder)
 		local workspaceSvc = game:GetService("Workspace")
 		local function fit()
 			local cam = workspaceSvc.CurrentCamera
@@ -79,18 +85,30 @@ return function(ctx)
 			fit()
 		end)
 
+		-- dark frame + 1px accent ring + gradient body
+		local main = render.frame(holder, {
+			Name = "Main",
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundColor3 = theme.outline,
+			Active = true,
+			ZIndex = 1,
+		})
+		self.main = main
+
 		local accent = render.frame(main, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
 			BackgroundColor3 = theme.accent,
+			ZIndex = 1,
 		})
 		theme:Track(accent, "BackgroundColor3", "accent")
 
 		local body = render.frame(accent, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(1, -2, 1, -2),
-			BackgroundColor3 = theme.lightcontrast,
+			ZIndex = 1,
 		})
+		render.shade(body, Color3.fromRGB(38, 38, 38), Color3.fromRGB(24, 24, 24))
 
 		local top = render.frame(body, {
 			Name = "Top",
@@ -99,12 +117,19 @@ return function(ctx)
 			Active = true,
 		})
 		self.top = top
+		-- accent underline beneath the title bar
+		local underline = render.frame(body, {
+			Position = UDim2.new(0, 0, 0, 29),
+			Size = UDim2.new(1, 0, 0, 1),
+			BackgroundColor3 = theme.accent,
+		})
+		theme:Track(underline, "BackgroundColor3", "accent")
 
 		local titleW = render.textSize(self.title).X
 		local title = render.label(top, {
 			Text = self.title,
-			Position = UDim2.new(0, 6, 0, 0),
-			Size = UDim2.new(0, titleW + 6, 1, 0),
+			Position = UDim2.new(0, 8, 0, 0),
+			Size = UDim2.new(0, titleW + 8, 1, 0),
 			TextYAlignment = Enum.TextYAlignment.Center,
 		})
 		theme:Track(title, "TextColor3", "text")
@@ -113,59 +138,47 @@ return function(ctx)
 		local close = render.button(top, {
 			Text = "x",
 			Size = UDim2.new(0, 22, 0, 18),
-			Position = UDim2.new(1, -6, 0.5, 0),
+			Position = UDim2.new(1, -7, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			TextSize = 14,
 			TextColor3 = theme.text,
-			BackgroundColor3 = theme.inline,
-			BackgroundTransparency = 0,
+			BackgroundColor3 = Color3.new(1, 1, 1),
 		})
-		render.borders(close, theme.outline, theme.inline)
+		local closeGrad = render.shade(close, Color3.fromRGB(52, 52, 52), Color3.fromRGB(36, 36, 36))
+		render.borders(close, theme.outline)
+		ctx.util.signal.connect(close.MouseEnter, function()
+			render.setShade(closeGrad, Color3.fromRGB(120, 55, 55), Color3.fromRGB(80, 35, 35))
+		end)
+		ctx.util.signal.connect(close.MouseLeave, function()
+			render.setShade(closeGrad, Color3.fromRGB(52, 52, 52), Color3.fromRGB(36, 36, 36))
+		end)
 		ctx.util.signal.connect(close.MouseButton1Click, function()
 			self:Hide()
 		end)
 
-		-- content stack: inline -> outline -> darkcontrast (back)
-		local contentInline = render.frame(body, {
-			Position = UDim2.new(0, 4, 0, 18),
-			Size = UDim2.new(1, -8, 1, -22),
-			BackgroundColor3 = theme.inline,
+		-- content well
+		local well = render.frame(body, {
+			Position = UDim2.new(0, 6, 0, 36),
+			Size = UDim2.new(1, -12, 1, -42),
+			ZIndex = 1,
 		})
-		local contentOutline = render.frame(contentInline, {
-			Position = UDim2.new(0, 1, 0, 1),
-			Size = UDim2.new(1, -2, 1, -2),
-			BackgroundColor3 = theme.outline,
-		})
-		local back = render.frame(contentOutline, {
-			Position = UDim2.new(0, 1, 0, 1),
-			Size = UDim2.new(1, -2, 1, -2),
-			BackgroundColor3 = theme.darkcontrast,
-		})
+		render.shade(well, Color3.fromRGB(26, 26, 26), Color3.fromRGB(17, 17, 17))
+		render.borders(well, theme.inline)
 
-		local strip = render.frame(back, {
+		local strip = render.frame(well, {
 			Name = "Tabs",
 			Position = UDim2.new(0, 4, 0, 4),
-			Size = UDim2.new(1, -8, 0, 20),
+			Size = UDim2.new(1, -8, 0, 22),
 			BackgroundTransparency = 1,
 		})
-		render.list(strip, { horizontal = true, padding = 4, vAlign = Enum.VerticalAlignment.Center })
+		render.list(strip, { horizontal = true, padding = 3, vAlign = Enum.VerticalAlignment.Center })
 		self.tabStrip = strip
 
-		-- content container: outline -> inline -> lightcontrast
-		local tabOutline = render.frame(back, {
-			Position = UDim2.new(0, 4, 0, 26),
-			Size = UDim2.new(1, -8, 1, -30),
-			BackgroundColor3 = theme.outline,
-		})
-		local tabInline = render.frame(tabOutline, {
-			Position = UDim2.new(0, 1, 0, 1),
-			Size = UDim2.new(1, -2, 1, -2),
-			BackgroundColor3 = theme.inline,
-		})
-		local content = render.frame(tabInline, {
-			Position = UDim2.new(0, 1, 0, 1),
-			Size = UDim2.new(1, -2, 1, -2),
-			BackgroundColor3 = theme.lightcontrast,
+		local content = render.frame(well, {
+			Name = "Content",
+			Position = UDim2.new(0, 0, 0, 30),
+			Size = UDim2.new(1, 0, 1, -34),
+			BackgroundTransparency = 1,
 		})
 		self.body = content
 
@@ -193,7 +206,7 @@ return function(ctx)
 			end
 			dragging = true
 			dragStart = input.Position
-			startPos = main.Position
+			startPos = holder.Position
 		end)
 		ctx.util.signal.connect(UIS.InputChanged, function(input)
 			if
@@ -207,7 +220,7 @@ return function(ctx)
 				return
 			end
 			local delta = input.Position - dragStart
-			main.Position = UDim2.new(
+			holder.Position = UDim2.new(
 				startPos.X.Scale,
 				startPos.X.Offset + delta.X,
 				startPos.Y.Scale,
@@ -232,7 +245,7 @@ return function(ctx)
 			return
 		end
 		self.visible = true
-		self.main.Visible = true
+		self.root.Visible = true
 	end
 
 	function Window:Hide()
@@ -240,7 +253,7 @@ return function(ctx)
 			return
 		end
 		self.visible = false
-		self.main.Visible = false
+		self.root.Visible = false
 	end
 
 	function Window:Toggle()
@@ -337,7 +350,7 @@ return function(ctx)
 	function Window:Notifications(info)
 		return ctx.require("widgets.notifications").new(self, info)
 	end
-	Window.NotificationList = Window.Notifications -- reference name
+	Window.NotificationList = Window.Notifications
 
 	function Window:KeybindsList(info)
 		return ctx.require("widgets.keybindslist").new(self, info)

@@ -17,15 +17,21 @@ return function(ctx)
 		})
 	end
 
-	-- full-width bordered control: outline -> inline -> fill
+	-- full-width bordered control with a vertical gradient; returns (row, gradient)
 	function base.control(section, height, fill)
 		local row = render.frame(section.content, {
 			Size = UDim2.new(1, 0, 0, height),
-			BackgroundColor3 = fill or theme.lightcontrast,
 			LayoutOrder = base.order(section),
 		})
-		render.borders(row, theme.outline, theme.inline)
-		return row
+		local top, bottom
+		if fill == theme.lightcontrast then
+			top, bottom = Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29)
+		else
+			top, bottom = Color3.fromRGB(26, 26, 26), Color3.fromRGB(17, 17, 17)
+		end
+		local grad = render.shade(row, top, bottom)
+		render.borders(row, theme.outline)
+		return row, grad
 	end
 
 	function base.register(api, flag)

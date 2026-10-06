@@ -25,16 +25,18 @@ return function(ctx)
 		local track = render.frame(row, {
 			Position = UDim2.new(0, 4, 0, 15),
 			Size = UDim2.new(1, -8, 0, 12),
-			BackgroundColor3 = theme.lightcontrast,
 		})
-		render.borders(track, theme.outline, theme.inline)
+		render.shade(track, Color3.fromRGB(30, 30, 30), Color3.fromRGB(17, 17, 17))
+		render.borders(track, theme.outline)
 
 		local fill = render.frame(track, {
 			Position = UDim2.new(0, 1, 0, 1),
 			Size = UDim2.new(0, 0, 1, -2),
-			BackgroundColor3 = theme.accent,
 		})
-		theme:Track(fill, "BackgroundColor3", "accent")
+		do
+			local a = theme.accent
+			render.shade(fill, a, Color3.new(a.R * 0.6, a.G * 0.6, a.B * 0.6))
+		end
 
 		local valueLabel = render.label(track, {
 			Size = UDim2.new(1, 0, 1, 0),

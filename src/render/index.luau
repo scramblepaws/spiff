@@ -111,6 +111,19 @@ return function(ctx)
 		return parent
 	end
 
+	-- vertical two-stop gradient (top -> bottom) for a subtle panel depth
+	function render.shade(parent, top, bottom)
+		parent.BackgroundColor3 = Color3.new(1, 1, 1)
+		return create("UIGradient", {
+			Color = ColorSequence.new(top, bottom),
+			Rotation = 90,
+		}, parent)
+	end
+
+	function render.setShade(gradient, top, bottom)
+		gradient.Color = ColorSequence.new(top, bottom)
+	end
+
 	function render.padding(parent, x, y)
 		return create("UIPadding", {
 			PaddingLeft = UDim.new(0, x),

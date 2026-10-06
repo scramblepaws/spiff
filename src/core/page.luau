@@ -15,15 +15,15 @@ return function(ctx)
 
 		local button = render.button(window.tabStrip, {
 			Text = self.name,
-			Size = UDim2.new(0, render.textSize(self.name).X + 20, 1, 0),
-			TextColor3 = theme.text,
+			Size = UDim2.new(0, render.textSize(self.name).X + 24, 1, 0),
+			TextColor3 = theme.dim,
 			TextSize = theme.textsize,
-			BackgroundColor3 = theme.darkcontrast,
-			BackgroundTransparency = 0,
 			LayoutOrder = #window.pages,
 		})
-		render.borders(button, theme.outline, theme.inline)
+		local grad = render.shade(button, Color3.fromRGB(24, 24, 24), Color3.fromRGB(15, 15, 15))
+		render.borders(button, theme.outline)
 		self.button = button
+		self.grad = grad
 
 		local content = render.frame(window.body, {
 			Size = UDim2.new(1, 0, 1, 0),
@@ -51,7 +51,13 @@ return function(ctx)
 	end
 
 	function Page:SetActive(on)
-		self.button.BackgroundColor3 = on and theme.lightcontrast or theme.darkcontrast
+		if on then
+			render.setShade(self.grad, Color3.fromRGB(40, 40, 40), Color3.fromRGB(27, 27, 27))
+			self.button.TextColor3 = theme.text
+		else
+			render.setShade(self.grad, Color3.fromRGB(24, 24, 24), Color3.fromRGB(15, 15, 15))
+			self.button.TextColor3 = theme.dim
+		end
 	end
 
 	function Page:Show()

@@ -7,15 +7,15 @@ return function(ctx)
 		outline = Color3.fromRGB(0, 0, 0),
 		inline = Color3.fromRGB(50, 50, 50),
 		textborder = Color3.fromRGB(0, 0, 0),
-		text = Color3.fromRGB(255, 255, 255),
+		text = Color3.fromRGB(235, 235, 235),
 		-- aliases used across modules
 		background = Color3.fromRGB(25, 25, 25),
 		surface = Color3.fromRGB(30, 30, 30),
 		section = Color3.fromRGB(25, 25, 25),
 		row = Color3.fromRGB(25, 25, 25),
 		dim = Color3.fromRGB(150, 150, 150),
-		font = Enum.Font.Code,
-		textsize = 13,
+		font = Enum.Font.Gotham,
+		textsize = 14,
 	}
 
 	function theme:Track(inst, prop, key)

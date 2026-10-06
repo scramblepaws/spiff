@@ -34,15 +34,15 @@ return function(ctx)
 		local frame = render.frame(parent, {
 			Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
-			BackgroundColor3 = theme.darkcontrast,
 		})
+		render.shade(frame, Color3.fromRGB(31, 31, 31), Color3.fromRGB(20, 20, 20))
 		render.borders(frame, theme.inline)
 		render.padding(frame, 4, 4)
 		self.frame = frame
 
 		-- full-width accent line flush to the top edge (offset back out of the padding)
 		local accent = render.frame(frame, {
-			Size = UDim2.new(1, 8, 0, 1),
+			Size = UDim2.new(1, 8, 0, 2),
 			Position = UDim2.new(0, -4, 0, -4),
 			BackgroundColor3 = theme.accent,
 			ZIndex = 2,

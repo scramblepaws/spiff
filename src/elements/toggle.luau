@@ -14,9 +14,18 @@ return function(ctx)
 		local box = render.frame(row, {
 			Size = UDim2.fromOffset(15, 15),
 			Position = UDim2.new(0, 4, 0, 2),
-			BackgroundColor3 = value and theme.accent or theme.lightcontrast,
 		})
-		render.borders(box, theme.outline, theme.inline)
+		local boxGrad = render.shade(box, Color3.fromRGB(32, 32, 32), Color3.fromRGB(20, 20, 20))
+		render.borders(box, theme.outline)
+		local function paint(on)
+			if on then
+				local a = theme.accent
+				render.setShade(boxGrad, a, Color3.new(a.R * 0.6, a.G * 0.6, a.B * 0.6))
+			else
+				render.setShade(boxGrad, Color3.fromRGB(32, 32, 32), Color3.fromRGB(20, 20, 20))
+			end
+		end
+		paint(value)
 
 		render.label(row, {
 			Text = info.name or "Toggle",
@@ -33,7 +42,7 @@ return function(ctx)
 
 		function api:Set(v)
 			value = v == true
-			box.BackgroundColor3 = value and theme.accent or theme.lightcontrast
+			paint(value)
 			if info.callback then
 				info.callback(value)
 			end

@@ -20,11 +20,10 @@ return function(ctx)
 			local btn = render.button(row, {
 				Text = tostring(name),
 				Size = UDim2.new(0.5, -2, 1, 0),
-				BackgroundColor3 = theme.lightcontrast,
-				BackgroundTransparency = 0,
 				TextColor3 = theme.text,
 			})
-			render.borders(btn, theme.outline, theme.inline)
+			render.shade(btn, Color3.fromRGB(44, 44, 44), Color3.fromRGB(29, 29, 29))
+			render.borders(btn, theme.outline)
 			ctx.util.signal.connect(btn.MouseButton1Click, function()
 				if callback then
 					callback()

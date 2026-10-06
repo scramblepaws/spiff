@@ -37,8 +37,16 @@ return function(ctx)
 			return value
 		end
 		function api:Destroy()
+			for i, entry in ipairs(ctx.state.keybinds) do
+				if entry.get == api.Get then
+					table.remove(ctx.state.keybinds, i)
+					break
+				end
+			end
 			row:Destroy()
 		end
+
+		ctx.state.keybinds[#ctx.state.keybinds + 1] = { name = info.name or "Keybind", get = api.Get }
 
 		ctx.util.signal.connect(btn.MouseButton1Click, function()
 			listening = true

@@ -73,6 +73,20 @@ assert(configbox:Get() == "default", "[smoke] configbox default")
 local holder = sec:AddButtonholder({ name = "H", buttons = { { name = "A" } } })
 assert(type(holder.Add) == "function", "[smoke] buttonholder Add missing")
 
+local watermark = win:Watermark({ text = "smoke" })
+assert(type(watermark.Set) == "function", "[smoke] watermark.Set missing")
+
+local notifications = win:Notifications()
+notifications:Add({ text = "hi", lifetime = 0.1 })
+
+local keybinds = win:KeybindsList()
+assert(type(keybinds.Toggle) == "function", "[smoke] keybindslist.Toggle missing")
+keybinds:Toggle(true)
+
+local status = win:StatusList()
+status:Set("Test", "ok")
+assert(type(status.Remove) == "function", "[smoke] statuslist.Remove missing")
+
 win:Destroy()
 assert(win.gui == nil, "[smoke] window:Destroy did not clear gui")
 

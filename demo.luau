@@ -39,5 +39,13 @@ general:AddButtonholder({ name = "Quick", buttons = {
 
 local settings = win:Page({ name = "Settings" })
 settings:Section({ name = "Config", side = "right" })
+settings:Section({ name = "Appearance", side = "left" }):AddColorpicker({ name = "Accent", value = Color3.fromRGB(178, 156, 255) })
+
+win:Watermark()
+local notifications = win:Notifications()
+notifications:Add({ text = "spiff " .. Menu._VERSION .. " loaded", lifetime = 4 })
+win:KeybindsList():Toggle(true)
+local status = win:StatusList()
+status:Set("fps", "60")
 
 print("[demo] spiff", Menu._VERSION, "ok")

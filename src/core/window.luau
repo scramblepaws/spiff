@@ -180,6 +180,22 @@ return function(ctx)
 		return page
 	end
 
+	function Window:Watermark(info)
+		return ctx.require("widgets.watermark").new(self, info)
+	end
+
+	function Window:Notifications(info)
+		return ctx.require("widgets.notifications").new(self, info)
+	end
+
+	function Window:KeybindsList(info)
+		return ctx.require("widgets.keybindslist").new(self, info)
+	end
+
+	function Window:StatusList(info)
+		return ctx.require("widgets.statuslist").new(self, info)
+	end
+
 	function Window:Destroy()
 		if self.gui then
 			self.gui:Destroy()

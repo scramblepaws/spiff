@@ -22,6 +22,13 @@ All notable changes to spiff are documented here. Format follows
   (click-to-rebind + press/release hooks); `render.textbox` primitive.
 - Phase 6: `elements/colorpicker` (HSV, reuses the slider), `listbox`, `configbox`,
   `buttonholder`.
+- Phase 7: widgets `watermark`, `notifications`, `keybindslist`, `statuslist`;
+  window methods to create them; keybind elements self-register for the list.
+
+### Skipped
+
+- Custom cursor widget: native Roblox cursors already work; a drawn cursor adds
+  nothing here. Add only if a Drawing backend lands.
 
 ### Verified
 

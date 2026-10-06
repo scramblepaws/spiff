@@ -33,5 +33,5 @@ should ever be large enough to be scary.
 
 `v1.0.0`: window, pages, sections; 12 elements (label, textbox, toggle, slider,
 button, buttonholder, dropdown, multibox, keybind, colorpicker, listbox,
-configbox); widgets (watermark, notifications, keybinds list, status list,
-cursor); config save/load; live theme recolor; unload/kill switch.
+configbox); widgets (watermark, notifications, keybinds list, status list);
+config save/load; live theme recolor; unload/kill switch.

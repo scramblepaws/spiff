@@ -23,5 +23,9 @@ return {
 	"elements.listbox",
 	"elements.configbox",
 	"elements.buttonholder",
+	"widgets.watermark",
+	"widgets.notifications",
+	"widgets.keybindslist",
+	"widgets.statuslist",
 	"init",
 }

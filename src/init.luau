@@ -18,6 +18,7 @@ return function(ctx)
 		end
 		table.clear(ctx.state.windows)
 		table.clear(ctx.state.flags)
+		table.clear(ctx.state.keybinds)
 		table.clear(ctx.state.colors)
 	end
 
